@@ -70,7 +70,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 <body class="auth-page">
   <div class="login-card register-card">
     <div class="login-head register-head">
-      <h1>👨‍🍳 Junte-se à ChefGuedes</h1>
+      <h1>Junte-se à ChefGuedes</h1>
       <p>Compartilhe suas receitas e descubra sabores únicos</p>
     </div>
     <div class="login-body">
@@ -78,20 +78,20 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         <div class="error"><?=htmlspecialchars(implode(' | ',$errors))?></div>
       <?php endif; ?>
       <form method="post">
-        <input class="input" name="username" placeholder="👤 Seu nome de chef" value="<?=isset($_POST['username'])?htmlspecialchars($_POST['username']):''?>">
-        <input class="input" name="email" placeholder="📧 Email para receitas" value="<?=isset($_POST['email'])?htmlspecialchars($_POST['email']):''?>">
+        <input class="input" name="username" placeholder="Seu nome de chef" value="<?=isset($_POST['username'])?htmlspecialchars($_POST['username']):''?>">
+        <input class="input" name="email" placeholder="Email para receitas" value="<?=isset($_POST['email'])?htmlspecialchars($_POST['email']):''?>">
         <div style="display:flex;gap:8px;align-items:end;">
-          <input class="input" name="password" id="password_reg" type="password" placeholder="🔐 Crie uma senha" style="flex:1;">
-          <button type="button" class="toggle-pwd" data-target="#password_reg">👁️</button>
+          <input class="input" name="password" id="password_reg" type="password" placeholder="Crie uma senha" style="flex:1;">
+          <button type="button" class="toggle-pwd" data-target="#password_reg">👁</button>
         </div>
-        <input class="input" name="password2" type="password" placeholder="🔒 Confirme sua senha">
+        <input class="input" name="password2" type="password" placeholder="Confirme sua senha">
         <div class="actions">
-          <button class="btn-primary" type="submit">🍳 Começar a Cozinhar</button>
+          <button class="btn-primary" type="submit">Começar a Cozinhar</button>
           <a href="login.php" class="btn-secondary">← Voltar</a>
         </div>
       </form>
     </div>
-    <div class="form-footer">🤝 Ao se registrar, você se torna parte da nossa família culinária!</div>
+    <div class="form-footer">Ao se registrar, você se torna parte da nossa família culinária!</div>
   </div>
   <script src="js/login.js"></script>
 </body>

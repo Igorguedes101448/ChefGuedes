@@ -3,123 +3,17 @@
    Para ser incluído após style.css
    =========================================== */
 
-/* Sistema de Iluminação Avançado */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        /* Luzes de destaque dinâmicas */
-        radial-gradient(circle at 20% 30%, rgba(255, 165, 0, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255, 99, 71, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 60% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 35%),
-        radial-gradient(circle at 30% 80%, rgba(155, 89, 182, 0.08) 0%, transparent 50%),
-        /* Gradiente base melhorado */
-        linear-gradient(135deg, 
-            rgba(255, 107, 107, 0.97) 0%, 
-            rgba(255, 165, 0, 0.94) 20%, 
-            rgba(255, 99, 71, 0.96) 40%, 
-            rgba(192, 57, 43, 0.98) 60%, 
-            rgba(139, 0, 0, 0.99) 100%
-        );
-    background-size: 
-        800px 800px, 
-        1000px 1000px, 
-        600px 600px, 
-        900px 900px, 
-        100% 100%;
-    background-position: 
-        0% 0%, 
-        100% 100%, 
-        50% 0%, 
-        0% 100%, 
-        0% 0%;
-    animation: 
-        advancedGradientShift 20s ease infinite, 
-        lightDance 25s ease-in-out infinite;
-    pointer-events: none;
-    z-index: -2;
-}
-
-@keyframes advancedGradientShift {
-    0% { 
-        background-position: 0% 0%, 100% 100%, 50% 0%, 0% 100%, 0% 0%; 
-        filter: hue-rotate(0deg);
-    }
-    25% { 
-        background-position: 50% 20%, 80% 60%, 70% 30%, 20% 80%, 25% 25%; 
-        filter: hue-rotate(5deg);
-    }
-    50% { 
-        background-position: 100% 50%, 20% 20%, 80% 60%, 60% 40%, 50% 50%; 
-        filter: hue-rotate(10deg);
-    }
-    75% { 
-        background-position: 60% 80%, 40% 90%, 30% 70%, 90% 10%, 75% 75%; 
-        filter: hue-rotate(5deg);
-    }
-    100% { 
-        background-position: 0% 0%, 100% 100%, 50% 0%, 0% 100%, 0% 0%; 
-        filter: hue-rotate(0deg);
-    }
-}
-
-@keyframes lightDance {
-    0%, 100% { 
-        opacity: 1; 
-        transform: scale(1) rotate(0deg); 
-    }
-    25% { 
-        opacity: 0.9; 
-        transform: scale(1.02) rotate(1deg); 
-    }
-    50% { 
-        opacity: 1.1; 
-        transform: scale(0.98) rotate(-1deg); 
-    }
-    75% { 
-        opacity: 0.95; 
-        transform: scale(1.01) rotate(0.5deg); 
-    }
-}
-
-/* Partículas flutuantes melhoradas */
+/* Refined background behaviour */
+body::before,
 body::after {
-    content: '🍳 🥘 🍅 🧄 🌶️ 🥕 🧅 🍖 🥖 🧈 🥗 🍯 ✨ 🌟 💫 🔥 ⭐ 🎇 💎 🏆';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    font-size: 1.8rem;
-    opacity: 0.03;
-    pointer-events: none;
-    z-index: -1;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: center;
-    animation: advancedFloatParticles 60s linear infinite;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    content: none !important;
 }
 
-@keyframes advancedFloatParticles {
-    0% { transform: translateY(0px) rotate(0deg) scale(1); }
-    20% { transform: translateY(-20px) rotate(72deg) scale(1.1); }
-    40% { transform: translateY(-35px) rotate(144deg) scale(0.9); }
-    60% { transform: translateY(-25px) rotate(216deg) scale(1.05); }
-    80% { transform: translateY(-15px) rotate(288deg) scale(0.95); }
-    100% { transform: translateY(0px) rotate(360deg) scale(1); }
-}
-
-/* Animações de entrada */
+/* Animações de entrada sutis */
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(24px);
     }
     to {
         opacity: 1;
@@ -130,7 +24,7 @@ body::after {
 @keyframes fadeInLeft {
     from {
         opacity: 0;
-        transform: translateX(-30px);
+        transform: translateX(-28px);
     }
     to {
         opacity: 1;
@@ -141,7 +35,7 @@ body::after {
 @keyframes fadeInRight {
     from {
         opacity: 0;
-        transform: translateX(30px);
+        transform: translateX(28px);
     }
     to {
         opacity: 1;
@@ -149,178 +43,57 @@ body::after {
     }
 }
 
+@keyframes cardEnter {
+    0% {
+        opacity: 0;
+        transform: translateY(24px) scale(0.98);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(-4px) scale(1.01);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 /* Aplicar animações aos elementos */
 .hero-text {
-    animation: fadeInLeft 1s ease-out;
+    animation: fadeInUp 0.52s ease-out both;
 }
 
 .hero-visual {
-    animation: fadeInRight 1s ease-out 0.3s both;
+    animation: fadeInRight 0.6s ease-out 0.12s both;
 }
 
 .stats-section {
-    animation: fadeInUp 1s ease-out 0.6s both;
+    animation: fadeInUp 0.6s ease-out 0.18s both;
 }
 
 .recipe-card {
-    animation: fadeInUp 0.8s ease-out both;
+    animation: cardEnter 0.62s ease-out both;
 }
 
-.recipe-card:nth-child(1) { animation-delay: 0.1s; }
-.recipe-card:nth-child(2) { animation-delay: 0.2s; }
-.recipe-card:nth-child(3) { animation-delay: 0.3s; }
+.recipe-card:nth-child(2) { animation-delay: 0.08s; }
+.recipe-card:nth-child(3) { animation-delay: 0.16s; }
+.recipe-card:nth-child(4) { animation-delay: 0.24s; }
 
-/* Efeito de parallax sutil para o fundo */
-@keyframes parallaxFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
+/* Hero accent animation reserved intentionally empty for the refined theme */
 
-.hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(255, 165, 0, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 99, 71, 0.1) 0%, transparent 50%);
-    animation: parallaxFloat 20s ease-in-out infinite;
-    pointer-events: none;
-    z-index: -1;
-}
+/* Premium card shine removed for subtle aesthetic */
 
-/* Efeito de brilho nos cards premium */
-.recipe-card.premium::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 215, 0, 0.3),
-        transparent
-    );
-    transition: left 0.8s ease;
-    z-index: 1;
-}
+/* Button animations simplified in refined theme */
 
-.recipe-card.premium:hover::before {
-    left: 100%;
-}
+/* Stat item hover kept minimal intentionally */
 
-/* Efeito de pulso para badges */
-@keyframes badgePulse {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.5);
-    }
-    50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
-    }
-}
+/* Typing animation removed for calmer hero */
 
-.recipe-card.premium .recipe-badge {
-    animation: badgePulse 2s infinite;
-}
+/* Hero wave overlay removed */
 
-/* Efeito de gradiente animado para botões */
-.btn-hero-primary, .btn-cta-primary {
-    background-size: 200% 200%;
-    background-image: linear-gradient(135deg, #fff 25%, #f8f9fa 25%, #f8f9fa 50%, #fff 50%, #fff 75%, #f8f9fa 75%);
-    animation: gradientMove 3s ease infinite;
-}
+/* Card hover relies on base stylesheet transitions */
 
-@keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* Efeitos de hover aprimorados */
-.stat-item {
-    position: relative;
-    overflow: hidden;
-}
-
-.stat-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-}
-
-.stat-item:hover::before {
-    transform: translateX(100%);
-}
-
-/* Efeito de typing para o título principal */
-@keyframes typing {
-    from { width: 0; }
-    to { width: 100%; }
-}
-
-@keyframes blink {
-    0%, 50% { border-color: transparent; }
-    51%, 100% { border-color: white; }
-}
-
-.hero-text h1 {
-    overflow: hidden;
-    white-space: nowrap;
-    border-right: 3px solid white;
-    animation: 
-        typing 3s steps(40) 1s both,
-        blink 1s step-end infinite 4s;
-    width: 100%;
-    max-width: fit-content;
-}
-
-/* Efeito de ondas no fundo */
-.hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23ffffff'%3E%3C/path%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23ffffff'%3E%3C/path%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23ffffff'%3E%3C/path%3E%3C/svg%3E") no-repeat;
-    background-size: cover;
-    opacity: 0.1;
-    pointer-events: none;
-}
-
-/* Efeitos de micro-interações */
-.recipe-card {
-    transform-origin: center;
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
-.recipe-card:hover {
-    animation: none; /* Remove animação de entrada ao hover */
-}
-
-/* Efeito de shake sutil para call-to-action */
-@keyframes subtleShake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-1px); }
-    75% { transform: translateX(1px); }
-}
-
-.cta-section {
-    animation: subtleShake 0.5s ease-in-out 5s;
-}
+/* CTA shake removed for calmer interactions */
 
 /* Melhorias para acessibilidade */
 @media (prefers-reduced-motion: reduce) {
@@ -331,13 +104,6 @@ body::after {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-    
-    .hero-text h1 {
-        border-right: none;
-        white-space: normal;
-        overflow: visible;
-        width: auto;
-    }
 }
 
 /* Estados de foco melhorados para acessibilidade */
@@ -347,7 +113,7 @@ body::after {
 .btn-cta-secondary:focus,
 .btn-view-more:focus,
 .logout-btn:focus {
-    outline: 3px solid rgba(255, 255, 255, 0.8);
+    outline: 3px solid rgba(57, 105, 114, 0.35);
     outline-offset: 2px;
 }
 

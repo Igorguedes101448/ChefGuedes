@@ -115,10 +115,11 @@ CREATE TABLE IF NOT EXISTS `recipe_stats` (
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Inserts de exemplo
+-- Senha do admin: admin123
 INSERT INTO `users` (`username`,`email`,`password_hash`,`role`) VALUES
-('admin','admin@example.com','<hash>','admin'),
-('alice','alice@example.com','<hash>','user'),
-('bob','bob@example.com','<hash>','user');
+('admin','admin@chefguedes.com','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi','admin'),
+('alice','alice@example.com','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi','user'),
+('bob','bob@example.com','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi','user');
 
 INSERT INTO `categories` (`name`,`slug`) VALUES
 ('Vegetarian','vegetarian'),

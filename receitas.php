@@ -85,12 +85,12 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.summary, COALESCE(rs
         <div class="nav-container">
             <a href="index.php" class="logo">ChefGuedes</a>
             <div class="nav-links">
-                <a href="index.php">🏠 Início</a>
-                <a href="receitas.php">📖 Receitas</a>
+                <a href="index.php">Início</a>
+                <a href="receitas.php">Receitas</a>
             </div>
             <div class="user-menu">
-                <span>👋 Olá, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
-                <a href="logout.php" style="color: #ff6b6b;">🚪 Sair</a>
+                <span>Olá, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
+                <a href="logout.php" style="color: #ff6b6b;">Sair</a>
             </div>
         </div>
     </nav>
@@ -115,28 +115,28 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.summary, COALESCE(rs
         <?php endif; ?>
 
         <section class="add-recipe">
-            <h2>🍳 Compartilhar Nova Receita</h2>
+            <h2>Compartilhar Nova Receita</h2>
             <form method="post">
                 <input type="hidden" name="add_recipe" value="1">
                 
-                <label for="title">📝 Título da Receita:</label>
+                <label for="title">Título da Receita:</label>
                 <input type="text" id="title" name="title" placeholder="Ex: Lasanha da Vovó" required>
 
-                <label for="summary">📋 Resumo (opcional):</label>
+                <label for="summary">Resumo (opcional):</label>
                 <textarea id="summary" name="summary" placeholder="Uma breve descrição da sua receita..."></textarea>
 
-                <label for="ingredients">🥕 Ingredientes:</label>
+                <label for="ingredients">Ingredientes:</label>
                 <textarea id="ingredients" name="ingredients" placeholder="Liste todos os ingredientes necessários..." required></textarea>
 
-                <label for="instructions">👩‍🍳 Modo de Preparo:</label>
+                <label for="instructions">Modo de Preparo:</label>
                 <textarea id="instructions" name="instructions" placeholder="Descreva passo a passo como preparar..." required></textarea>
 
                 <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
                     <input type="checkbox" name="is_vegetarian" style="transform: scale(1.2);"> 
-                    🌱 Esta receita é vegetariana
+                    🥣 Esta receita é vegetariana
                 </label>
 
-                <button type="submit" class="btn-primary">🍽️ Adicionar Receita</button>
+                <button type="submit" class="btn-primary">Adicionar Receita</button>
             </form>
         </section>
 
@@ -152,7 +152,7 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.summary, COALESCE(rs
                         <div class="recipe-card">
                             <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
                             <p><?php echo htmlspecialchars($recipe['summary'] ?: 'Uma deliciosa receita especial...'); ?></p>
-                            <small>👨‍🍳 Por <?php echo htmlspecialchars($recipe['username']); ?> em <?php echo date('d/m/Y', strtotime($recipe['created_at'])); ?></small>
+                            <small>Por <?php echo htmlspecialchars($recipe['username']); ?> em <?php echo date('d/m/Y', strtotime($recipe['created_at'])); ?></small>
                             <a href="receita.php?slug=<?php echo htmlspecialchars($recipe['slug']); ?>">Ver Receita</a>
                         </div>
                     <?php endforeach; ?>
@@ -165,14 +165,14 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.summary, COALESCE(rs
             <div class="recipes-grid">
                 <?php if (empty($monthly_recipes)): ?>
                     <p style="grid-column: 1/-1; text-align: center; color: #999; font-style: italic;">
-                        📅 Nenhuma receita foi adicionada este mês.
+                        Nenhuma receita foi adicionada este mês.
                     </p>
                 <?php else: ?>
                     <?php foreach ($monthly_recipes as $recipe): ?>
                         <div class="recipe-card">
                             <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
                             <p><?php echo htmlspecialchars($recipe['summary'] ?: 'Uma deliciosa receita especial...'); ?></p>
-                            <small>👨‍🍳 Por <?php echo htmlspecialchars($recipe['username']); ?> em <?php echo date('d/m/Y', strtotime($recipe['created_at'])); ?></small>
+                            <small>Por <?php echo htmlspecialchars($recipe['username']); ?> em <?php echo date('d/m/Y', strtotime($recipe['created_at'])); ?></small>
                             <a href="receita.php?slug=<?php echo htmlspecialchars($recipe['slug']); ?>">Ver Receita</a>
                         </div>
                     <?php endforeach; ?>
@@ -205,14 +205,14 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.summary, COALESCE(rs
             <div class="recipes-grid">
                 <?php if (empty($most_viewed)): ?>
                     <p style="grid-column: 1/-1; text-align: center; color: #999; font-style: italic;">
-                        👀 Nenhuma receita foi visualizada ainda.
+                        Nenhuma receita foi visualizada ainda.
                     </p>
                 <?php else: ?>
                     <?php foreach ($most_viewed as $recipe): ?>
                         <div class="recipe-card">
                             <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
                             <p><?php echo htmlspecialchars($recipe['summary'] ?: 'Uma deliciosa receita especial...'); ?></p>
-                            <small>👀 Visualizada <?php echo $recipe['made_count']; ?> vezes</small>
+                            <small>Visualizada <?php echo $recipe['made_count']; ?> vezes</small>
                             <a href="receita.php?slug=<?php echo htmlspecialchars($recipe['slug']); ?>">Ver Receita</a>
                         </div>
                     <?php endforeach; ?>
@@ -223,9 +223,9 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.summary, COALESCE(rs
 
     <footer class="footer">
         <div class="container">
-            <h3>🍽️ ChefGuedes</h3>
+            <h3>ChefGuedes</h3>
             <p>Compartilhe sabores, crie memórias</p>
-            <p>&copy; 2025 - Feito com ❤️ para amantes da culinária</p>
+            <p>&copy; 2025 - Feito com amor para amantes da culinária</p>
         </div>
     </footer>
 </body>

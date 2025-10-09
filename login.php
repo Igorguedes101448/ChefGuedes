@@ -105,18 +105,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 				<?php endif; ?>
 				<form method="post">
 					<input type="hidden" name="action" value="login">
-					<input class="input" name="identifier" placeholder="✉️ Email ou usuário" value="<?=isset($_POST['identifier'])?htmlspecialchars($_POST['identifier']):''?>">
+					<input class="input" name="identifier" placeholder="Email ou usuário" value="<?=isset($_POST['identifier'])?htmlspecialchars($_POST['identifier']):''?>">
 					<div style="display:flex;gap:8px;align-items:end;">
-						<input class="input" name="password" id="password" type="password" placeholder="🔒 Senha" style="flex:1;">
-						<button type="button" id="togglePassword" class="toggle-pwd">👁️</button>
+						<input class="input" name="password" id="password" type="password" placeholder="Senha" style="flex:1;">
+						<button type="button" id="togglePassword" class="toggle-pwd">👁</button>
 					</div>
 					<div class="actions">
-						<button class="btn-primary" type="submit">🍳 Entrar na Cozinha</button>
+						<button class="btn-primary" type="submit">Entrar na Cozinha</button>
 						<a href="register.php" class="btn-secondary">Criar conta</a>
 					</div>
 				</form>
 			</div>
-			<div class="form-footer">🔑 Esqueceu a senha? Entre em contato conosco!</div>
+			<div class="form-footer">Esqueceu a senha? Entre em contato conosco!</div>
 		</div>
 		<script src="js/login.js"></script>
 	</body>

@@ -143,15 +143,15 @@ if (!$recipe) {
         <div class="nav-container">
             <a href="index.php" class="logo">ChefGuedes</a>
             <div class="nav-links">
-                <a href="index.php">🏠 Início</a>
-                <a href="receitas.php">📖 Receitas</a>
+                <a href="index.php">Início</a>
+                <a href="receitas.php">Receitas</a>
             </div>
             <div class="user-menu">
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <span>👋 Olá, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
-                    <a href="logout.php" style="color: #ff6b6b;">🚪 Sair</a>
+                    <span>Olá, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span>
+                    <a href="logout.php" style="color: #ff6b6b;">Sair</a>
                 <?php else: ?>
-                    <a href="login.php" style="background: #ff6b6b; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none;">🔑 Entrar</a>
+                    <a href="login.php" style="background: #ff6b6b; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none;">Entrar</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -186,23 +186,23 @@ if (!$recipe) {
 
             <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 30px;">
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; margin-bottom: 5px;">👨‍🍳</div>
+                    <div style="font-size: 2rem; margin-bottom: 5px;">CG</div>
                     <small style="color: #999;">Por <?php echo htmlspecialchars($recipe['username']); ?></small>
                 </div>
                 
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; margin-bottom: 5px;">⭐</div>
+                    <div style="font-size: 2rem; margin-bottom: 5px;">★</div>
                     <small style="color: #999;"><?php echo $avg_rating > 0 ? number_format($avg_rating, 1) . '/5' : 'Sem avaliações'; ?></small>
                 </div>
                 
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; margin-bottom: 5px;">👀</div>
+                    <div style="font-size: 2rem; margin-bottom: 5px;">�</div>
                     <small style="color: #999;"><?php echo $recipe['made_count'] ?: 0; ?> vezes feita</small>
                 </div>
                 
                 <?php if ($recipe['is_vegetarian']): ?>
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; margin-bottom: 5px;">🌱</div>
+                    <div style="font-size: 2rem; margin-bottom: 5px;">🥣</div>
                     <small style="color: #999;">Vegetariana</small>
                 </div>
                 <?php endif; ?>
@@ -233,7 +233,7 @@ if (!$recipe) {
             <!-- Instructions -->
             <section class="instructions-section">
                 <h2 style="font-family: 'Playfair Display', serif; color: #333; margin-bottom: 25px; display: flex; align-items: center; gap: 15px;">
-                    👩‍🍳 Modo de Preparo
+                    Modo de Preparo
                 </h2>
                 <div style="background: #fafafa; padding: 25px; border-radius: 15px; border-left: 4px solid #ffa500;">
                     <pre style="white-space: pre-wrap; font-family: 'Inter', sans-serif; line-height: 1.8; color: #555; margin: 0;"><?php echo htmlspecialchars($recipe['instructions']); ?></pre>
@@ -266,13 +266,13 @@ if (!$recipe) {
         <!-- Comments Section -->
         <section style="margin-bottom: 40px;">
             <h2 style="font-family: 'Playfair Display', serif; color: #333; margin-bottom: 25px;">
-                💬 Comentários (<?php echo count($comments); ?>)
+                Comentários (<?php echo count($comments); ?>)
             </h2>
             
             <form method="post" style="margin-bottom: 30px;">
                 <textarea name="comment" placeholder="Compartilhe sua experiência com esta receita..." style="width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 15px; min-height: 100px; resize: vertical; font-family: 'Inter', sans-serif;"></textarea>
                 <button type="submit" name="add_comment" class="btn-primary" style="margin-top: 15px; border: none; cursor: pointer;">
-                    📝 Adicionar Comentário
+                    Adicionar Comentário
                 </button>
             </form>
 
@@ -280,7 +280,7 @@ if (!$recipe) {
                 <?php foreach ($comments as $comment): ?>
                     <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eee;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <strong style="color: #333;">👤 <?php echo htmlspecialchars($comment['username']); ?></strong>
+                            <strong style="color: #333;"><?php echo htmlspecialchars($comment['username']); ?></strong>
                             <small style="color: #999;"><?php echo date('d/m/Y H:i', strtotime($comment['created_at'])); ?></small>
                         </div>
                         <p style="color: #666; line-height: 1.6; margin: 0;"><?php echo htmlspecialchars($comment['content']); ?></p>
@@ -296,9 +296,9 @@ if (!$recipe) {
         </section>
         <?php else: ?>
         <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, #fafafa, #f0f0f0); border-radius: 15px;">
-            <h3 style="color: #333; margin-bottom: 15px;">💬 Quer avaliar e comentar?</h3>
+            <h3 style="color: #333; margin-bottom: 15px;">Quer avaliar e comentar?</h3>
             <p style="color: #666; margin-bottom: 20px;">Faça login para compartilhar sua experiência com esta receita!</p>
-            <a href="login.php" class="btn-primary" style="text-decoration: none; padding: 12px 24px; border-radius: 8px;">🔑 Fazer Login</a>
+            <a href="login.php" class="btn-primary" style="text-decoration: none; padding: 12px 24px; border-radius: 8px;">Fazer Login</a>
         </div>
         <?php endif; ?>
 
@@ -311,9 +311,9 @@ if (!$recipe) {
 
     <footer class="footer">
         <div class="container">
-            <h3>🍽️ ChefGuedes</h3>
+            <h3>ChefGuedes</h3>
             <p>Compartilhe sabores, crie memórias</p>
-            <p>&copy; 2025 - Feito com ❤️ para amantes da culinária</p>
+            <p>&copy; 2025 - Feito com amor para amantes da culinária</p>
         </div>
     </footer>
 

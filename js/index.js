@@ -645,4 +645,307 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize star rating system
     initStarRating();
+    
+    // Initialize search and filter system
+    initSearchAndFilter();
 });
+
+// Sistema de Pesquisa e Filtros
+function initSearchAndFilter() {
+    const searchInput = document.getElementById('recipeSearch');
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const recipeCards = document.querySelectorAll('.portuguese-recipes .recipe-card');
+    
+    let currentCategory = 'all';
+    let currentSearch = '';
+    
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            currentSearch = e.target.value.toLowerCase();
+            filterRecipes();
+        });
+    }
+    
+    // Category filter functionality
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            categoryBtns.forEach(b => b.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            currentCategory = this.dataset.category;
+            filterRecipes();
+        });
+    });
+    
+    function filterRecipes() {
+        recipeCards.forEach(card => {
+            const cardCategory = card.dataset.category;
+            const cardTitle = card.querySelector('h4').textContent.toLowerCase();
+            const cardDescription = card.querySelector('.recipe-description').textContent.toLowerCase();
+            
+            const matchesCategory = currentCategory === 'all' || cardCategory === currentCategory;
+            const matchesSearch = currentSearch === '' || 
+                                cardTitle.includes(currentSearch) || 
+                                cardDescription.includes(currentSearch);
+            
+            if (matchesCategory && matchesSearch) {
+                card.style.display = 'block';
+                card.style.animation = 'fadeInUp 0.5s ease forwards';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Show message if no recipes found
+        const visibleCards = Array.from(recipeCards).filter(card => card.style.display !== 'none');
+        const recipesGrid = document.getElementById('portugueseRecipesGrid');
+        
+        // Remove existing no-results message
+        const existingMessage = document.querySelector('.no-results-message');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+        
+        if (visibleCards.length === 0) {
+            const noResultsMessage = document.createElement('div');
+            noResultsMessage.className = 'no-results-message';
+            noResultsMessage.style.cssText = `
+                grid-column: 1 / -1;
+                text-align: center;
+                padding: 60px 20px;
+                color: #6c757d;
+                font-size: 1.1rem;
+            `;
+            noResultsMessage.innerHTML = `
+                <div style="font-size: 3rem; margin-bottom: 20px;">🔍</div>
+                <h4 style="margin-bottom: 10px;">Nenhuma receita encontrada</h4>
+                <p>Tente ajustar sua pesquisa ou filtros.</p>
+            `;
+            recipesGrid.appendChild(noResultsMessage);
+        }
+    }
+    
+    // Add fade animation CSS
+    const fadeCSS = `
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    `;
+    
+    const fadeStyle = document.createElement('style');
+    fadeStyle.textContent = fadeCSS;
+    document.head.appendChild(fadeStyle);
+}
+
+// ===== SISTEMA DE ANALYTICS E ESTATÍSTICAS =====
+
+class RecipeAnalytics {
+    constructor() {
+        this.sessionViews = new Set();
+        this.searchQueries = [];
+    }
+    
+    // Registrar visualização de receita
+    async recordView(recipeId) {
+        const viewKey = `view_${recipeId}`;
+        if (this.sessionViews.has(viewKey)) return;
+        
+        this.sessionViews.add(viewKey);
+        
+        try {
+            await fetch('api/recipe_stats.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'view',
+                    recipe_id: recipeId
+                })
+            });
+        } catch (error) {
+            console.error('Erro ao registrar visualização:', error);
+        }
+    }
+    
+    // Registrar pesquisa
+    async recordSearch(query, type = 'text', resultsCount = 0) {
+        this.searchQueries.push({ query, type, timestamp: new Date() });
+        
+        try {
+            await fetch('api/recipe_stats.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'search',
+                    query: query,
+                    type: type,
+                    results_count: resultsCount
+                })
+            });
+        } catch (error) {
+            console.error('Erro ao registrar pesquisa:', error);
+        }
+    }
+    
+    // Alternar favorito
+    async toggleFavorite(recipeId, button) {
+        try {
+            const response = await fetch('api/recipe_stats.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'favorite',
+                    recipe_id: recipeId
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Atualizar UI do botão
+                if (result.action === 'added') {
+                    button.innerHTML = '❤️';
+                    button.classList.add('favorited');
+                    button.title = 'Remover dos Favoritos';
+                } else {
+                    button.innerHTML = '🤍';
+                    button.classList.remove('favorited');
+                    button.title = 'Adicionar aos Favoritos';
+                }
+                
+                // Mostrar feedback
+                this.showToast(`Receita ${result.action === 'added' ? 'adicionada aos' : 'removida dos'} favoritos!`);
+            }
+        } catch (error) {
+            console.error('Erro ao alterar favorito:', error);
+            this.showToast('Erro ao alterar favorito. Tente novamente.', 'error');
+        }
+    }
+    
+    // Mostrar notificação toast
+    showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? '#4caf50' : '#f44336'};
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Animar entrada
+        setTimeout(() => toast.style.transform = 'translateX(0)', 100);
+        
+        // Remover após 3 segundos
+        setTimeout(() => {
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+}
+
+// Instanciar analytics globalmente
+const analytics = new RecipeAnalytics();
+
+// Adicionar funcionalidades de favoritos aos cards
+function addInteractivityToCards() {
+    const cards = document.querySelectorAll('.recipe-card');
+    
+    cards.forEach(card => {
+        // Adicionar botão de favorito se não existir
+        if (!card.querySelector('.favorite-btn')) {
+            const favoriteBtn = document.createElement('button');
+            favoriteBtn.className = 'favorite-btn';
+            favoriteBtn.innerHTML = '🤍';
+            favoriteBtn.title = 'Adicionar aos Favoritos';
+            favoriteBtn.style.cssText = `
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: rgba(255,255,255,0.9);
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                backdrop-filter: blur(4px);
+            `;
+            
+            // Hover effects
+            favoriteBtn.addEventListener('mouseenter', () => {
+                favoriteBtn.style.transform = 'scale(1.1)';
+                favoriteBtn.style.boxShadow = '0 4px 15px rgba(0,0,0,0.25)';
+            });
+            
+            favoriteBtn.addEventListener('mouseleave', () => {
+                favoriteBtn.style.transform = 'scale(1)';
+                favoriteBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+            });
+            
+            // Adicionar evento de clique
+            favoriteBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const recipeId = card.dataset.recipeId;
+                if (recipeId) {
+                    analytics.toggleFavorite(recipeId, favoriteBtn);
+                } else {
+                    // Para receitas estáticas, simular comportamento
+                    if (favoriteBtn.innerHTML === '🤍') {
+                        favoriteBtn.innerHTML = '❤️';
+                        favoriteBtn.title = 'Remover dos Favoritos';
+                        analytics.showToast('Receita adicionada aos favoritos!');
+                    } else {
+                        favoriteBtn.innerHTML = '🤍';
+                        favoriteBtn.title = 'Adicionar aos Favoritos';
+                        analytics.showToast('Receita removida dos favoritos!');
+                    }
+                }
+            });
+            
+            card.style.position = 'relative';
+            card.appendChild(favoriteBtn);
+        }
+        
+        // Registrar visualização ao clicar no card
+        card.addEventListener('click', (e) => {
+            if (e.target.classList.contains('favorite-btn')) return;
+            
+            const recipeId = card.dataset.recipeId;
+            if (recipeId) {
+                analytics.recordView(recipeId);
+            }
+        });
+    });
+}
+
+// Integrar analytics após o carregamento
+setTimeout(() => {
+    addInteractivityToCards();
+    analytics.recordSearch('homepage_view', 'page_view', document.querySelectorAll('.recipe-card').length);
+    console.log('🔍 Sistema de analytics ativado!');
+}, 1000);
