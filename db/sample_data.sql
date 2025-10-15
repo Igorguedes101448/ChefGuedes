@@ -19,11 +19,21 @@ INSERT INTO `recipes` (`user_id`, `category_id`, `title`, `slug`, `summary`, `in
 '1. Grelhe os bifes e salsichas\n2. Torre o pão levemente\n3. Monte as sandes com carnes\n4. Prepare o molho com cerveja\n5. Cubra com queijo\n6. Leve ao forno até gratinar\n7. Sirva bem quente', 
 20, 15, 35, 4, 'facil', 0, 0, 0, 1, NOW()),
 
+(1, 1, 'Arroz de Marisco', 'arroz-de-marisco', 'Arroz cremoso com uma variedade de mariscos frescos do mar português.', 
+'400g arroz\n1kg marisco variado\n1 cebola\n3 tomates\n4 dentes alho\nCoentros\nAzeite\nVinho branco\nCaldo de peixe\nColorau', 
+'1. Limpe bem o marisco\n2. Prepare um refogado com cebola, alho e tomate\n3. Junte o marisco e regue com vinho\n4. Adicione o arroz e o caldo\n5. Cozinhe 18 minutos\n6. Finalize com coentros', 
+25, 30, 55, 6, 'medio', 0, 0, 1, 1, NOW()),
+
 -- Sopas
 (1, 2, 'Caldo Verde', 'caldo-verde', 'A tradicional sopa minhota com couve galega e chouriço.', 
 '500g batatas\n200g couve galega\n150g chouriço\n1 cebola\n3 dentes alho\nAzeite\nSal', 
 '1. Cozinhe as batatas com cebola e alho\n2. Passe tudo pelo passe-vite\n3. Junte a couve cortada fininha\n4. Adicione o chouriço às rodelas\n5. Tempere com sal e azeite\n6. Sirva bem quente', 
 15, 30, 45, 6, 'facil', 0, 0, 1, 1, NOW()),
+
+(1, 2, 'Açorda Alentejana', 'acorda-alentejana', 'Sopa tradicional alentejana com pão, alho, coentros e ovo escalfado.', 
+'6 fatias pão alentejano\n6 ovos\n6 dentes alho\nCoentros\nAzeite\nÁgua a ferver\nSal', 
+'1. Corte o pão em fatias grossas\n2. Esmague o alho com sal\n3. Misture com coentros picados\n4. Regue com azeite e água a ferver\n5. Deixe repousar 5 minutos\n6. Sirva com ovo escalfado', 
+10, 15, 25, 4, 'facil', 1, 0, 0, 0, NOW()),
 
 -- Peixe e Marisco
 (1, 3, 'Cataplana de Marisco', 'cataplana-marisco', 'Deliciosa cataplana com amêijoas, camarão e lingueirão.', 
@@ -31,17 +41,38 @@ INSERT INTO `recipes` (`user_id`, `category_id`, `title`, `slug`, `summary`, `in
 '1. Limpe bem o marisco\n2. Refogue a cebola e alho\n3. Junte o tomate e pimento\n4. Adicione o marisco\n5. Regue com vinho branco\n6. Cozinhe na cataplana 15 min\n7. Polvilhe com coentros', 
 25, 20, 45, 4, 'medio', 0, 0, 1, 1, NOW()),
 
+(1, 3, 'Bacalhau com Natas', 'bacalhau-com-natas', 'Receita cremosa de bacalhau gratinado com natas e queijo.', 
+'800g bacalhau demolhado\n500ml natas\n1kg batatas\n2 cebolas\n200g queijo ralado\nAzeite\nSal e pimenta', 
+'1. Cozinhe e desfie o bacalhau\n2. Corte as batatas às rodelas e frite\n3. Refogue as cebolas\n4. Numa travessa, alterne camadas\n5. Cubra com natas e queijo\n6. Gratine no forno 20 minutos', 
+30, 35, 65, 6, 'medio', 0, 0, 1, 0, NOW()),
+
 -- Doces
 (1, 4, 'Pastéis de Nata', 'pasteis-de-nata', 'Os famosos pastéis de nata com massa folhada e creme.', 
 '300g massa folhada\n500ml leite\n6 gemas\n200g açúcar\n2 c.sopa farinha\nCanela\nRaspa de limão', 
 '1. Prepare o creme com leite, açúcar e farinha\n2. Junte as gemas uma a uma\n3. Forre as formas com massa\n4. Deite o creme nas formas\n5. Leve ao forno a 220°C\n6. Asse até dourar o topo\n7. Polvilhe com canela', 
 45, 15, 60, 12, 'dificil', 1, 0, 0, 1, NOW()),
 
+(1, 4, 'Pudim Flan', 'pudim-flan', 'Sobremesa cremosa com caramelo, perfeita para ocasiões especiais.', 
+'6 ovos\n1 lata leite condensado\n200ml leite\n150g açúcar\n2 c.sopa água', 
+'1. Faça caramelo com açúcar e água\n2. Forre a forma com o caramelo\n3. Bata os ovos com leite condensado\n4. Adicione o leite e misture bem\n5. Deite na forma e coza em banho-maria\n6. Refrigere antes de desenformar', 
+20, 50, 70, 8, 'medio', 1, 0, 1, 0, NOW()),
+
 -- Petiscos
 (1, 5, 'Pataniscas de Bacalhau', 'pataniscas-bacalhau', 'Deliciosos bolinhos de bacalhau fritos, perfeitos para petisco.', 
 '300g bacalhau salgado\n200g farinha\n3 ovos\n1 cebola\nSalsa\nAzeite para fritar\nSal e pimenta', 
 '1. Demolhe e cozinhe o bacalhau\n2. Desfie muito bem\n3. Misture com farinha e ovos\n4. Junte cebola e salsa picadas\n5. Tempere a gosto\n6. Frite às colheradas em azeite quente\n7. Escorra em papel absorvente', 
-20, 15, 35, 6, 'facil', 0, 0, 0, 0, NOW());
+20, 15, 35, 6, 'facil', 0, 0, 0, 0, NOW()),
+
+(1, 5, 'Rissóis de Camarão', 'rissois-de-camarao', 'Rissóis crocantes recheados com camarão e bechamel.', 
+'500g camarão\n500ml leite\n3 c.sopa farinha\n1 cebola\nMassa para rissóis\nOvos para empanar\nPão ralado', 
+'1. Faça bechamel com farinha e leite\n2. Refogue camarão com cebola\n3. Misture com bechamel\n4. Rechei as massas\n5. Passe em ovo e pão ralado\n6. Frite em óleo bem quente', 
+40, 20, 60, 8, 'dificil', 0, 0, 0, 0, NOW()),
+
+-- Bebidas
+(1, 6, 'Sangria Portuguesa', 'sangria-portuguesa', 'Refrescante sangria com vinho tinto e frutas da época.', 
+'1 garrafa vinho tinto\n2 pêssegos\n1 maçã\n1 laranja\n50ml brandy\n2 c.sopa açúcar\nÁgua com gás', 
+'1. Corte as frutas em cubos\n2. Misture com açúcar e brandy\n3. Deixe macerar 2 horas\n4. Adicione o vinho tinto\n5. Complete com água com gás\n6. Sirva bem gelada com gelo', 
+15, 0, 15, 6, 'facil', 1, 1, 1, 0, NOW());
 
 -- ===== INSERIR TAGS NAS RECEITAS =====
 
@@ -50,24 +81,42 @@ INSERT INTO `recipe_tags` (`recipe_id`, `tag_id`) VALUES
 (1, 1), (1, 3), (1, 10),
 -- Francesinha  
 (2, 1), (2, 3), (2, 12),
+-- Arroz de Marisco
+(3, 1), (3, 3), (3, 12),
 -- Caldo Verde
-(3, 1), (3, 4), (3, 9),
+(4, 1), (4, 4), (4, 9),
+-- Açorda Alentejana
+(5, 1), (5, 2), (5, 5),
 -- Cataplana
-(4, 1), (4, 3), (4, 12),
+(6, 1), (6, 3), (6, 12),
+-- Bacalhau com Natas
+(7, 1), (7, 3), (7, 9),
 -- Pastéis de Nata
-(5, 1), (5, 10), (5, 11),
+(8, 1), (8, 10), (8, 11),
+-- Pudim Flan
+(9, 1), (9, 2), (9, 10),
 -- Pataniscas
-(6, 1), (6, 3), (6, 5);
+(10, 1), (10, 3), (10, 5),
+-- Rissóis
+(11, 1), (11, 3), (11, 12),
+-- Sangria
+(12, 1), (12, 2), (12, 8);
 
 -- ===== INICIALIZAR ESTATÍSTICAS =====
 
 INSERT INTO `recipe_stats` (`recipe_id`, `total_views`, `unique_views`, `total_favorites`, `total_made`, `total_ratings`, `average_rating`, `popularity_score`) VALUES
 (1, 145, 98, 23, 45, 12, 4.3, 287.5),
 (2, 198, 156, 34, 28, 18, 4.6, 412.8),
-(3, 234, 187, 45, 67, 25, 4.8, 623.4),
-(4, 89, 72, 18, 15, 8, 4.2, 178.6),
-(5, 312, 245, 78, 123, 45, 4.7, 998.5),
-(6, 123, 95, 28, 35, 15, 4.1, 287.5);
+(3, 189, 142, 29, 38, 15, 4.4, 356.2),
+(4, 234, 187, 45, 67, 25, 4.8, 623.4),
+(5, 156, 124, 31, 42, 19, 4.2, 389.6),
+(6, 89, 72, 18, 15, 8, 4.2, 178.6),
+(7, 167, 134, 26, 33, 14, 4.5, 334.8),
+(8, 312, 245, 78, 123, 45, 4.7, 998.5),
+(9, 201, 178, 52, 89, 32, 4.6, 567.3),
+(10, 123, 95, 28, 35, 15, 4.1, 287.5),
+(11, 134, 108, 22, 29, 11, 4.3, 298.7),
+(12, 98, 76, 19, 24, 9, 4.4, 224.8);
 
 -- ===== SIMULAR ATIVIDADE DE USUÁRIOS =====
 
@@ -112,10 +161,10 @@ INSERT INTO `recipe_ratings` (`recipe_id`, `user_id`, `rating`, `comment`, `crea
 
 -- ===== ATUALIZAR ESTATÍSTICAS DO SISTEMA =====
 
-UPDATE `system_stats` SET `stat_value` = '6' WHERE `stat_key` = 'total_recipes';
-UPDATE `system_stats` SET `stat_value` = '8' WHERE `stat_key` = 'total_searches';
-UPDATE `system_stats` SET `stat_value` = '156' WHERE `stat_key` = 'total_views';
-UPDATE `system_stats` SET `stat_value` = '4.6' WHERE `stat_key` = 'avg_rating';
+UPDATE `system_stats` SET `stat_value` = '12' WHERE `stat_key` = 'total_recipes';
+UPDATE `system_stats` SET `stat_value` = '15' WHERE `stat_key` = 'total_searches';
+UPDATE `system_stats` SET `stat_value` = '2346' WHERE `stat_key` = 'total_views';
+UPDATE `system_stats` SET `stat_value` = '4.5' WHERE `stat_key` = 'avg_rating';
 
 -- ===== VIEWS PARA FACILITAR CONSULTAS =====
 

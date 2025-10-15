@@ -355,7 +355,7 @@
             </div>
             
             <div class="metric-card">
-                <div class="metric-icon">⭐</div>
+                <div class="metric-icon">★</div>
                 <div class="metric-value" id="avgRating">0.0</div>
                 <div class="metric-label">Avaliação Média</div>
                 <div class="metric-change change-positive" id="ratingChange">+0.0</div>
@@ -608,7 +608,7 @@
                     { type: 'view', title: 'Usuário visualizou "Bacalhau à Brás"', time: '2 min atrás' },
                     { type: 'search', title: 'Pesquisa por "pastéis de nata"', time: '3 min atrás' },
                     { type: 'favorite', title: 'Receita favoritada: "Francesinha"', time: '5 min atrás' },
-                    { type: 'rating', title: 'Nova avaliação 5⭐ para "Caldo Verde"', time: '7 min atrás' },
+                    { type: 'rating', title: 'Nova avaliação 5★ para "Caldo Verde"', time: '7 min atrás' },
                     { type: 'view', title: 'Usuário visualizou "Cataplana de Marisco"', time: '8 min atrás' },
                     { type: 'search', title: 'Pesquisa por "sobremesas portuguesas"', time: '10 min atrás' }
                 ];
@@ -636,7 +636,7 @@
                     view: '👁️',
                     search: '🔍',
                     favorite: '❤️',
-                    rating: '⭐'
+                    rating: '★'
                 };
                 return icons[type] || '📝';
             }

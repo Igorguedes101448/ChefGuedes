@@ -29,7 +29,7 @@ Criei um sistema completo de analytics e estatísticas para o ChefGuedes que inc
    - Tracking automático de visualizações
    - Registro de pesquisas e cliques
 
-## 🚀 Como Configurar
+## Como Configurar
 
 ### 1. Configurar o Banco de Dados
 
@@ -202,7 +202,7 @@ Password: password (será o hash padrão do Laravel)
 3. Avaliem receitas para ajudar outros usuários
 4. Marquem receitas como feitas para histórico pessoal
 
-## 🚀 Recursos Avançados
+## Recursos Avançados
 
 ### Auto-refresh
 - Dashboard atualiza automaticamente a cada 30s

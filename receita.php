@@ -23,7 +23,7 @@ if ($slug) {
     $mysqli = db_connect();
     if ($mysqli) {
         // Get recipe details
-        $stmt = $mysqli->prepare("SELECT r.*, u.username, rs.avg_rating, rs.rating_count, rs.made_count FROM recipes r JOIN users u ON r.user_id = u.id LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id WHERE r.slug = ? LIMIT 1");
+        $stmt = $mysqli->prepare("SELECT r.*, u.username, rs.average_rating as avg_rating, rs.total_ratings as rating_count, rs.total_views as made_count FROM recipes r JOIN users u ON r.user_id = u.id LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id WHERE r.slug = ? LIMIT 1");
         if ($stmt) {
             $stmt->bind_param('s', $slug);
             $stmt->execute();
@@ -178,9 +178,9 @@ if (!$recipe) {
                 <?php echo htmlspecialchars($recipe['title']); ?>
             </h1>
             
-            <?php if ($recipe['summary']): ?>
+            <?php if ($recipe['description']): ?>
                 <p style="font-size: 1.2rem; color: #666; max-width: 800px; margin: 0 auto 30px; line-height: 1.6;">
-                    <?php echo htmlspecialchars($recipe['summary']); ?>
+                    <?php echo htmlspecialchars($recipe['description']); ?>
                 </p>
             <?php endif; ?>
 
@@ -202,7 +202,7 @@ if (!$recipe) {
                 
                 <?php if ($recipe['is_vegetarian']): ?>
                 <div style="text-align: center;">
-                    <div style="font-size: 2rem; margin-bottom: 5px;">🥣</div>
+                    <div style="font-size: 2rem; margin-bottom: 5px;">S</div>
                     <small style="color: #999;">Vegetariana</small>
                 </div>
                 <?php endif; ?>
@@ -245,7 +245,7 @@ if (!$recipe) {
         <!-- Rating Section -->
         <section style="background: linear-gradient(135deg, #fafafa, #f0f0f0); padding: 30px; border-radius: 15px; margin-bottom: 40px;">
             <h2 style="font-family: 'Playfair Display', serif; color: #333; margin-bottom: 25px;">
-                ⭐ Avaliar esta Receita
+                ★ Avaliar esta Receita
             </h2>
             <form method="post" style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
                 <label style="font-weight: 600;">Sua avaliação:</label>
@@ -253,7 +253,7 @@ if (!$recipe) {
                     <?php for ($i = 1; $i <= 5; $i++): ?>
                         <label style="cursor: pointer;">
                             <input type="radio" name="rating" value="<?php echo $i; ?>" <?php echo ($user_rating == $i) ? 'checked' : ''; ?> style="display: none;">
-                            <span style="font-size: 1.5rem; color: <?php echo ($user_rating >= $i) ? '#ff6b6b' : '#ddd'; ?>; transition: color 0.3s;">⭐</span>
+                            <span style="font-size: 1.5rem; color: <?php echo ($user_rating >= $i) ? '#ff6b6b' : '#ddd'; ?>; transition: color 0.3s;">★</span>
                         </label>
                     <?php endfor; ?>
                 </div>

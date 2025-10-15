@@ -304,7 +304,7 @@
                 <div class="stat-card">
                     <h3>Avaliação Média</h3>
                     <div class="stat-number">${parseFloat(totals.avg_rating || 0).toFixed(1)}</div>
-                    <div class="stat-change positive">⭐ de 5 estrelas</div>
+                    <div class="stat-change positive">★ de 5 estrelas</div>
                 </div>
             `;
             
@@ -407,7 +407,7 @@
                                 <td>${recipe.title}</td>
                                 <td>${recipe.total_views || 0}</td>
                                 <td>${recipe.total_favorites || 0}</td>
-                                <td>${parseFloat(recipe.average_rating || 0).toFixed(1)} ⭐</td>
+                                <td>${parseFloat(recipe.average_rating || 0).toFixed(1)} ★</td>
                             </tr>
                         `).join('')}
                     </tbody>

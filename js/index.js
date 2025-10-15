@@ -80,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Formatação especial para diferentes tipos de números
             if (element.textContent.includes('+')) {
                 element.textContent = Math.floor(current).toLocaleString() + '+';
-            } else if (element.textContent.includes('⭐')) {
-                element.textContent = current.toFixed(1) + '⭐';
+            } else if (element.textContent.includes('★')) {
+                element.textContent = current.toFixed(1) + '★';
             } else {
                 element.textContent = Math.floor(current).toLocaleString();
             }
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     let targetNumber;
                     
                     // Extrair número do texto
-                    if (originalText.includes('4.8⭐')) {
+                    if (originalText.includes('4.8★')) {
                         targetNumber = 4.8;
                     } else {
                         targetNumber = parseInt(originalText.replace(/[^\d]/g, ''));
@@ -240,11 +240,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Ativar modo "chef especial"
                 document.body.style.filter = 'hue-rotate(180deg)';
                 
-                // Adicionar emojis especiais
-                const specialEmojis = ['👨‍🍳', '🔥', '⭐', '🎉'];
+                // Adicionar símbolos especiais
+                const specialSymbols = ['Chef', '★', '!', '+'];
                 for (let i = 0; i < 20; i++) {
                     setTimeout(() => {
-                        createFloatingEmoji(specialEmojis[Math.floor(Math.random() * specialEmojis.length)]);
+                        createFloatingEmoji(specialSymbols[Math.floor(Math.random() * specialSymbols.length)]);
                     }, i * 100);
                 }
                 
@@ -337,11 +337,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Textos para diferentes avaliações
             const ratingTexts = {
                 0: 'Clique para avaliar',
-                1: '⭐ Não gostei',
-                2: '⭐⭐ Poderia ser melhor', 
-                3: '⭐⭐⭐ Boa receita',
-                4: '⭐⭐⭐⭐ Muito boa!',
-                5: '⭐⭐⭐⭐⭐ Perfeita!'
+                1: '★ Não gostei',
+                2: '★★ Poderia ser melhor', 
+                3: '★★★ Boa receita',
+                4: '★★★★ Muito boa!',
+                5: '★★★★★ Perfeita!'
             };
             
             // Adicionar eventos às estrelas
@@ -414,11 +414,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 setRating(stars, userRating);
                 
                 const ratingTexts = {
-                    1: '⭐ Você avaliou: Não gostei',
-                    2: '⭐⭐ Você avaliou: Poderia ser melhor', 
-                    3: '⭐⭐⭐ Você avaliou: Boa receita',
-                    4: '⭐⭐⭐⭐ Você avaliou: Muito boa!',
-                    5: '⭐⭐⭐⭐⭐ Você avaliou: Perfeita!'
+                    1: '★ Você avaliou: Não gostei',
+                    2: '★★ Você avaliou: Poderia ser melhor', 
+                    3: '★★★ Você avaliou: Boa receita',
+                    4: '★★★★ Você avaliou: Muito boa!',
+                    5: '★★★★★ Você avaliou: Perfeita!'
                 };
                 
                 ratingText.textContent = ratingTexts[userRating];
@@ -486,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create multiple star particles
         for (let i = 0; i < 8; i++) {
             const particle = document.createElement('span');
-            particle.textContent = '⭐';
+            particle.textContent = '★';
             particle.style.cssText = `
                 position: absolute;
                 font-size: 1.2rem;
@@ -612,7 +612,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (currentRatingEl) {
             const roundedAverage = Math.round(newAverage * 10) / 10;
-            currentRatingEl.innerHTML = `⭐ ${roundedAverage} <span class="rating-count">(${totalRatings})</span>`;
+            currentRatingEl.innerHTML = `★ ${roundedAverage} <span class="rating-count">(${totalRatings})</span>`;
             
             // Add update animation
             currentRatingEl.style.transform = 'scale(1.1)';

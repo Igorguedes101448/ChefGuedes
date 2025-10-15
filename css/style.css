@@ -2,7 +2,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;}
+html,body{height:100%;overflow-x:hidden;}
+
+/* Prevent layout shifts */
+img, video {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Flexbox fallback prevention */
+.recipe-grid, .testimonials-grid {
+    display: grid;
+    gap: 20px;
+}
+
+/* Text overflow prevention */
+.recipe-title, .chef-name, .brand {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Container width control */
+.container, .hero-container, .search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 
 :root {
     --color-background: #f8f5f0;
@@ -656,11 +682,32 @@ body::after {
 }
 
 /* Grid de Receitas */
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin: 40px 0;
+    width: 100%;
+}
+
 .recipes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 32px;
     margin-bottom: 50px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .recipe-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .recipes-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
 }
 
 /* Sistema de Pesquisa e Filtros */

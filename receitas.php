@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_recipe'])) {
         $errors[] = 'Erro de conexão com o banco de dados.';
     } else {
         $title = trim($_POST['title'] ?? '');
-        $summary = trim($_POST['summary'] ?? '');
+        $description = trim($_POST['summary'] ?? ''); // Using description instead of summary
         $ingredients = trim($_POST['ingredients'] ?? '');
         $instructions = trim($_POST['instructions'] ?? '');
         $is_vegetarian = isset($_POST['is_vegetarian']) ? 1 : 0;
@@ -35,9 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_recipe'])) {
             $errors[] = 'Preencha os campos obrigatórios.';
         } else {
             $slug = strtolower(str_replace(' ', '-', preg_replace('/[^A-Za-z0-9\-]/', '', $title)));
-            $stmt = $mysqli->prepare("INSERT INTO recipes (user_id, title, slug, summary, ingredients, instructions, is_vegetarian) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $mysqli->prepare("INSERT INTO recipes (user_id, title, slug, description, ingredients, instructions) VALUES (?, ?, ?, ?, ?, ?)");
             if ($stmt) {
-                $stmt->bind_param('isssssi', $_SESSION['user_id'], $title, $slug, $summary, $ingredients, $instructions, $is_vegetarian);
+                $stmt->bind_param('isssss', $_SESSION['user_id'], $title, $slug, $description, $ingredients, $instructions);
                 if ($stmt->execute()) {
                     $success = 'Receita adicionada com sucesso!';
                 } else {
@@ -61,13 +61,13 @@ function get_recipes($query) {
     return $recipes;
 }
 
-$weekly_recipes = get_recipes("SELECT r.id, r.title, r.slug, r.summary, r.created_at, u.username FROM recipes r JOIN users u ON r.user_id = u.id WHERE r.created_at >= DATE_SUB(NOW(), INTERVAL 1 WEEK) ORDER BY r.created_at DESC LIMIT 8");
+$weekly_recipes = get_recipes("SELECT r.id, r.title, r.slug, r.description as summary, r.created_at, u.username FROM recipes r JOIN users u ON r.user_id = u.id WHERE r.created_at >= DATE_SUB(NOW(), INTERVAL 1 WEEK) ORDER BY r.created_at DESC LIMIT 8");
 
-$monthly_recipes = get_recipes("SELECT r.id, r.title, r.slug, r.summary, r.created_at, u.username FROM recipes r JOIN users u ON r.user_id = u.id WHERE r.created_at >= DATE_SUB(NOW(), INTERVAL 1 MONTH) ORDER BY r.created_at DESC LIMIT 8");
+$monthly_recipes = get_recipes("SELECT r.id, r.title, r.slug, r.description as summary, r.created_at, u.username FROM recipes r JOIN users u ON r.user_id = u.id WHERE r.created_at >= DATE_SUB(NOW(), INTERVAL 1 MONTH) ORDER BY r.created_at DESC LIMIT 8");
 
-$best_recipes = get_recipes("SELECT r.id, r.title, r.slug, r.summary, COALESCE(rs.avg_rating, 0) as avg_rating FROM recipes r LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id ORDER BY rs.avg_rating DESC LIMIT 8");
+$best_recipes = get_recipes("SELECT r.id, r.title, r.slug, r.description as summary, COALESCE(rs.average_rating, 0) as avg_rating FROM recipes r LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id ORDER BY rs.average_rating DESC LIMIT 8");
 
-$most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.summary, COALESCE(rs.made_count, 0) as made_count FROM recipes r LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id ORDER BY rs.made_count DESC LIMIT 8");
+$most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.description as summary, COALESCE(rs.total_views, 0) as made_count FROM recipes r LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id ORDER BY rs.total_views DESC LIMIT 8");
 
 ?>
 <!DOCTYPE html>
@@ -133,7 +133,7 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.summary, COALESCE(rs
 
                 <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
                     <input type="checkbox" name="is_vegetarian" style="transform: scale(1.2);"> 
-                    🥣 Esta receita é vegetariana
+                    Esta receita é vegetariana
                 </label>
 
                 <button type="submit" class="btn-primary">Adicionar Receita</button>
@@ -185,14 +185,14 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.summary, COALESCE(rs
             <div class="recipes-grid">
                 <?php if (empty($best_recipes)): ?>
                     <p style="grid-column: 1/-1; text-align: center; color: #999; font-style: italic;">
-                        ⭐ Ainda não temos avaliações suficientes.
+                        ★ Ainda não temos avaliações suficientes.
                     </p>
                 <?php else: ?>
                     <?php foreach ($best_recipes as $recipe): ?>
                         <div class="recipe-card">
                             <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
                             <p><?php echo htmlspecialchars($recipe['summary'] ?: 'Uma deliciosa receita especial...'); ?></p>
-                            <small>⭐ Avaliação: <?php echo $recipe['avg_rating'] > 0 ? number_format($recipe['avg_rating'], 1) . '/5' : 'Sem avaliações'; ?></small>
+                            <small>★ Avaliação: <?php echo $recipe['avg_rating'] > 0 ? number_format($recipe['avg_rating'], 1) . '/5' : 'Sem avaliações'; ?></small>
                             <a href="receita.php?slug=<?php echo htmlspecialchars($recipe['slug']); ?>">Ver Receita</a>
                         </div>
                     <?php endforeach; ?>
