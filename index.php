@@ -41,6 +41,31 @@ $username = $_SESSION['username'] ?? null;
         </div>
     </header>
 
+    <!-- Quick Navigation -->
+    <nav class="quick-nav">
+        <div class="container">
+            <div class="nav-links">
+                <a href="explorar.php" class="nav-link primary">
+                    <i class="icon-search"></i> Explorar Receitas
+                </a>
+                <?php if ($username): ?>
+                    <a href="receitas.php" class="nav-link">
+                        <i class="icon-edit"></i> Minhas Receitas
+                    </a>
+                    <a href="dashboard.php" class="nav-link">
+                        <i class="icon-chart"></i> Dashboard
+                    </a>
+                <?php endif; ?>
+                <a href="analytics.php" class="nav-link">
+                    <i class="icon-analytics"></i> Analytics
+                </a>
+                <a href="suporte.php" class="nav-link">
+                    <i class="icon-support"></i> Suporte
+                </a>
+            </div>
+        </div>
+    </nav>
+
     <main class="app-main">
         <!-- Hero Section -->
         <section class="hero-section">
@@ -313,37 +338,6 @@ $username = $_SESSION['username'] ?? null;
             </div>
         </section>
     </main>
-
-    <footer class="app-footer">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <div class="brand">
-                    <span class="brand-icon">CG</span>
-                    ChefGuedes
-                </div>
-                <p>Compartilhando sabores autênticos e criando memórias culinárias inesquecíveis.</p>
-            </div>
-            
-            <div class="footer-links">
-                <div class="link-group">
-                    <h4>Receitas</h4>
-                    <a href="explorar.php">Explorar</a>
-                    <a href="compartilhar.php">Compartilhar</a>
-                    <a href="receitas.php">Todas</a>
-                </div>
-                
-                <div class="link-group">
-                    <h4>Comunidade</h4>
-                    <a href="login.php">Entrar</a>
-                    <a href="register.php">Registar</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 ChefGuedes. Todos os direitos reservados.</p>
-        </div>
-    </footer>
 </div>
 
 <!-- Rating Modal -->

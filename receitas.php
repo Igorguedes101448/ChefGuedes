@@ -220,13 +220,5 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.description as summa
             </div>
         </section>
     </div>
-
-    <footer class="footer">
-        <div class="container">
-            <h3>ChefGuedes</h3>
-            <p>Compartilhe sabores, crie memórias</p>
-            <p>&copy; 2025 - Feito com amor para amantes da culinária</p>
-        </div>
-    </footer>
 </body>
 </html>

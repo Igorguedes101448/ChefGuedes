@@ -1,3 +1,115 @@
+<?php
+require_once 'includes/config.php';
+
+// Parâmetros de filtro
+$search = $_GET['search'] ?? '';
+$category = $_GET['category'] ?? 'all';
+$difficulty = $_GET['difficulty'] ?? '';
+$vegetarian = $_GET['vegetarian'] ?? '';
+$vegan = $_GET['vegan'] ?? '';
+$gluten_free = $_GET['gluten_free'] ?? '';
+$sort = $_GET['sort'] ?? 'recent';
+$page = max(1, (int)($_GET['page'] ?? 1));
+$per_page = 12;
+$offset = ($page - 1) * $per_page;
+
+// Construir query de busca
+$where_conditions = ['r.is_active = 1'];
+$params = [];
+
+if (!empty($search)) {
+    $where_conditions[] = '(r.title LIKE ? OR r.description LIKE ? OR r.ingredients LIKE ?)';
+    $search_param = '%' . $search . '%';
+    $params = array_merge($params, [$search_param, $search_param, $search_param]);
+}
+
+if ($category !== 'all') {
+    $where_conditions[] = 'r.category_id = ?';
+    $params[] = $category;
+}
+
+if (!empty($difficulty)) {
+    $where_conditions[] = 'r.difficulty = ?';
+    $params[] = $difficulty;
+}
+
+if ($vegetarian === '1') {
+    $where_conditions[] = 'r.is_vegetarian = 1';
+}
+
+if ($vegan === '1') {
+    $where_conditions[] = 'r.is_vegan = 1';
+}
+
+if ($gluten_free === '1') {
+    $where_conditions[] = 'r.is_gluten_free = 1';
+}
+
+$where_clause = implode(' AND ', $where_conditions);
+
+// Definir ordenação
+$order_by = match($sort) {
+    'recent' => 'r.created_at DESC',
+    'popular' => 'rs.total_views DESC',
+    'rating' => 'rs.average_rating DESC',
+    'time' => 'r.total_time ASC',
+    default => 'r.created_at DESC'
+};
+
+// Buscar receitas
+$recipes = [];
+$total_recipes = 0;
+
+try {
+    // Contar total
+    $count_sql = "
+        SELECT COUNT(*)
+        FROM recipes r
+        LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id
+        WHERE $where_clause
+    ";
+    $stmt = $pdo->prepare($count_sql);
+    $stmt->execute($params);
+    $total_recipes = $stmt->fetchColumn();
+
+    // Buscar receitas
+    $sql = "
+        SELECT 
+            r.*,
+            c.name as category_name,
+            u.username as chef_name,
+            rs.total_views,
+            rs.total_favorites,
+            rs.average_rating,
+            rs.total_ratings
+        FROM recipes r
+        LEFT JOIN categories c ON r.category_id = c.id
+        LEFT JOIN users u ON r.user_id = u.id
+        LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id
+        WHERE $where_clause
+        ORDER BY $order_by
+        LIMIT $per_page OFFSET $offset
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $recipes = $stmt->fetchAll();
+
+} catch (Exception $e) {
+    $error = 'Erro ao buscar receitas: ' . $e->getMessage();
+}
+
+// Buscar categorias para filtros
+$categories = [];
+try {
+    $stmt = $pdo->query("SELECT id, name FROM categories WHERE is_active = 1 ORDER BY order_position");
+    $categories = $stmt->fetchAll();
+} catch (Exception $e) {
+    $categories = [];
+}
+
+$total_pages = ceil($total_recipes / $per_page);
+?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -36,86 +148,135 @@
         
         .filters-section {
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.08);
             margin-bottom: 40px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .filters-title {
-            font-size: 1.3rem;
+            font-size: 2rem;
             font-weight: 600;
-            color: var(--color-text);
-            margin-bottom: 20px;
+            color: #2d3748;
+            margin-bottom: 30px;
             text-align: center;
         }
         
         .search-container {
             position: relative;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .search-input {
             width: 100%;
-            padding: 15px 50px 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
+            padding: 18px 120px 18px 24px;
+            border: 2px solid #e2e8f0;
+            border-radius: 50px;
             font-size: 1.1rem;
             transition: all 0.3s ease;
             box-sizing: border-box;
+            background: #f8fafc;
         }
         
         .search-input:focus {
             outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(201, 107, 62, 0.1);
+            border-color: #c96b3e;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(201, 107, 62, 0.1);
         }
         
         .search-btn {
             position: absolute;
-            right: 10px;
+            right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            background: var(--color-primary);
+            background: #c96b3e;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 12px 24px;
+            border-radius: 40px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
         }
         
         .search-btn:hover {
-            background: var(--color-accent);
+            background: #b5543a;
+            transform: translateY(-50%) scale(1.05);
         }
         
         .filter-categories {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .category-filter {
-            background: #f8f9fa;
+            background: #f1f5f9;
             border: 2px solid transparent;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #475569;
+        }
+        
+        .category-filter:hover {
+            background: #e2e8f0;
+            border-color: #c96b3e;
+            transform: translateY(-2px);
+        }
+        
+        .category-filter.active {
+            background: #c96b3e;
+            color: white;
+            border-color: #c96b3e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(201, 107, 62, 0.3);
+        }
+        
+        .additional-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .filter-option {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
             padding: 10px 20px;
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
+            font-size: 0.95rem;
+            color: #64748b;
         }
         
-        .category-filter:hover {
-            background: var(--color-light);
-            border-color: var(--color-primary);
+        .filter-option:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+            transform: translateY(-1px);
         }
         
-        .category-filter.active {
-            background: var(--color-primary);
-            color: white;
-            border-color: var(--color-primary);
+        .filter-option.active {
+            background: #f1f5f9;
+            color: #334155;
+            border-color: #94a3b8;
+            font-weight: 600;
         }
         
         .additional-filters {
@@ -192,6 +353,17 @@
             transition: all 0.3s ease;
             position: relative;
         }
+
+        .recipe-difficulty-badge {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
         
         .recipe-card:hover {
             transform: translateY(-5px);
@@ -259,13 +431,6 @@
             color: var(--color-text-light);
         }
         
-        .recipe-difficulty {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        
         .difficulty-facil {
             background: #d4edda;
             color: #155724;
@@ -324,136 +489,85 @@
                 font-size: 2rem;
             }
             
-            .recipes-grid {
-                grid-template-columns: 1fr;
+            .filters-section {
+                padding: 25px 20px;
+                margin: 20px;
             }
             
-            .results-header {
-                flex-direction: column;
-                align-items: stretch;
+            .filters-title {
+                font-size: 1.5rem;
+            }
+            
+            .search-input {
+                padding: 16px 100px 16px 20px;
+                font-size: 1rem;
+            }
+            
+            .search-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
             }
             
             .filter-categories {
                 justify-content: flex-start;
                 overflow-x: auto;
-                padding-bottom: 10px;
+                padding: 10px 0;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            
+            .filter-categories::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .category-filter {
+                flex-shrink: 0;
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
+            
+            .additional-filters {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding: 10px 0;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            
+            .additional-filters::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .filter-option {
+                flex-shrink: 0;
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .recipes-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                margin: 20px;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+                margin: 20px;
+            }
+            
+            .results-count {
+                text-align: center;
+            }
+            
+            .sort-options {
+                align-self: center;
             }
         }
     </style>
 </head>
 <body>
-    <?php
-    require_once 'includes/config.php';
-    
-    // Parâmetros de filtro
-    $search = $_GET['search'] ?? '';
-    $category = $_GET['category'] ?? 'all';
-    $difficulty = $_GET['difficulty'] ?? '';
-    $vegetarian = $_GET['vegetarian'] ?? '';
-    $vegan = $_GET['vegan'] ?? '';
-    $gluten_free = $_GET['gluten_free'] ?? '';
-    $sort = $_GET['sort'] ?? 'recent';
-    $page = max(1, (int)($_GET['page'] ?? 1));
-    $per_page = 12;
-    $offset = ($page - 1) * $per_page;
-    
-    // Construir query de busca
-    $where_conditions = ['r.is_active = 1'];
-    $params = [];
-    
-    if (!empty($search)) {
-        $where_conditions[] = '(r.title LIKE ? OR r.description LIKE ? OR r.ingredients LIKE ?)';
-        $search_param = '%' . $search . '%';
-        $params = array_merge($params, [$search_param, $search_param, $search_param]);
-    }
-    
-    if ($category !== 'all') {
-        $where_conditions[] = 'r.category_id = ?';
-        $params[] = $category;
-    }
-    
-    if (!empty($difficulty)) {
-        $where_conditions[] = 'r.difficulty = ?';
-        $params[] = $difficulty;
-    }
-    
-    if ($vegetarian === '1') {
-        $where_conditions[] = 'r.is_vegetarian = 1';
-    }
-    
-    if ($vegan === '1') {
-        $where_conditions[] = 'r.is_vegan = 1';
-    }
-    
-    if ($gluten_free === '1') {
-        $where_conditions[] = 'r.is_gluten_free = 1';
-    }
-    
-    $where_clause = implode(' AND ', $where_conditions);
-    
-    // Definir ordenação
-    $order_by = match($sort) {
-        'recent' => 'r.created_at DESC',
-        'popular' => 'rs.total_views DESC',
-        'rating' => 'rs.average_rating DESC',
-        'time' => 'r.total_time ASC',
-        default => 'r.created_at DESC'
-    };
-    
-    // Buscar receitas
-    $recipes = [];
-    $total_recipes = 0;
-    
-    try {
-        // Contar total
-        $count_sql = "
-            SELECT COUNT(*)
-            FROM recipes r
-            LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id
-            WHERE $where_clause
-        ";
-        $stmt = $pdo->prepare($count_sql);
-        $stmt->execute($params);
-        $total_recipes = $stmt->fetchColumn();
-        
-        // Buscar receitas
-        $sql = "
-            SELECT 
-                r.*,
-                c.name as category_name,
-                u.username as chef_name,
-                rs.total_views,
-                rs.total_favorites,
-                rs.average_rating,
-                rs.total_ratings
-            FROM recipes r
-            LEFT JOIN categories c ON r.category_id = c.id
-            LEFT JOIN users u ON r.user_id = u.id
-            LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id
-            WHERE $where_clause
-            ORDER BY $order_by
-            LIMIT $per_page OFFSET $offset
-        ";
-        
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        $recipes = $stmt->fetchAll();
-        
-    } catch (Exception $e) {
-        $error = 'Erro ao buscar receitas: ' . $e->getMessage();
-    }
-    
-    // Buscar categorias para filtros
-    $categories = [];
-    try {
-        $stmt = $pdo->query("SELECT id, name FROM categories WHERE is_active = 1 ORDER BY order_position");
-        $categories = $stmt->fetchAll();
-    } catch (Exception $e) {
-        $categories = [];
-    }
-    
-    $total_pages = ceil($total_recipes / $per_page);
-    ?>
     
     <div class="explore-container">
         <div class="explore-header">
@@ -474,30 +588,50 @@
                     <button type="submit" class="search-btn">Pesquisar</button>
                 </div>
                 
+                <!-- Filtros por Categoria -->
                 <div class="filter-categories">
                     <div class="category-filter <?= $category === 'all' ? 'active' : '' ?>" 
                          onclick="setCategory('all')">
                         Todas
                     </div>
-                    <?php foreach ($categories as $cat): ?>
+                    <?php 
+                    // Ordem específica das categorias para corresponder à imagem
+                    $category_order = [
+                        'Pratos Principais' => 'pratos-principais',
+                        'Sopas' => 'sopas', 
+                        'Sobremesas' => 'sobremesas',
+                        'Entradas' => 'entradas',
+                        'Bebidas' => 'bebidas'
+                    ];
+                    
+                    foreach ($category_order as $name => $slug):
+                        foreach ($categories as $cat):
+                            if ($cat['name'] === $name):
+                    ?>
                         <div class="category-filter <?= $category == $cat['id'] ? 'active' : '' ?>" 
                              onclick="setCategory('<?= $cat['id'] ?>')">
                             <?= htmlspecialchars($cat['name']) ?>
                         </div>
-                    <?php endforeach; ?>
+                    <?php 
+                            break;
+                            endif;
+                        endforeach;
+                    endforeach; 
+                    ?>
                 </div>
                 
+                <!-- Filtros Adicionais -->
                 <div class="additional-filters">
-                    <div class="filter-option <?= $difficulty === 'facil' ? 'active' : '' ?>" 
-                         onclick="toggleFilter('difficulty', 'facil')">
+                    <div class="filter-option <?= $difficulty === 'easy' ? 'active' : '' ?>" 
+                         onclick="toggleFilter('difficulty', 'easy')">
                         Fácil
                     </div>
-                    <div class="filter-option <?= $difficulty === 'medio' ? 'active' : '' ?>" 
-                         onclick="toggleFilter('difficulty', 'medio')">
+                    <div class="filter-option <?= $difficulty === 'medium' ? 'active' : '' ?>" 
+                         onclick="toggleFilter('difficulty', 'medium')">
                         Médio
                     </div>
-                    <div class="filter-option <?= $difficulty === 'dificil' ? 'active' : '' ?>" 
-                         onclick="toggleFilter('difficulty', 'dificil')">
+                    <div class="filter-option <?= $difficulty === 'hard' ? 'active' : '' ?>" 
+                         onclick="toggleFilter('difficulty', 'hard')">
                         Difícil
                     </div>
                     <div class="filter-option <?= $vegetarian === '1' ? 'active' : '' ?>" 
@@ -548,6 +682,9 @@
             <div class="recipes-grid">
                 <?php foreach ($recipes as $recipe): ?>
                     <div class="recipe-card" onclick="window.location.href='receita.php?slug=<?= urlencode($recipe['slug']) ?>'">
+                        <div class="recipe-difficulty-badge difficulty-<?= $recipe['difficulty'] ?>">
+                            <?= getDifficultyText($recipe['difficulty']) ?>
+                        </div>
                         <div class="recipe-image">
                             <?= strtoupper(substr($recipe['title'], 0, 1)) ?>
                         </div>
@@ -570,10 +707,6 @@
                                     <span>★ <?= number_format($recipe['average_rating'] ?? 0, 1) ?></span>
                                     <span>(<?= $recipe['total_ratings'] ?? 0 ?>)</span>
                                     <span>• 👁️ <?= $recipe['total_views'] ?? 0 ?></span>
-                                </div>
-                                
-                                <div class="recipe-difficulty difficulty-<?= $recipe['difficulty'] ?>">
-                                    <?= getDifficultyText($recipe['difficulty']) ?>
                                 </div>
                             </div>
                         </div>

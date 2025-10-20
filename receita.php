@@ -309,14 +309,6 @@ if (!$recipe) {
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <h3>ChefGuedes</h3>
-            <p>Compartilhe sabores, crie memórias</p>
-            <p>&copy; 2025 - Feito com amor para amantes da culinária</p>
-        </div>
-    </footer>
-
     <script>
         // Star rating interactivity
         document.querySelectorAll('input[name="rating"]').forEach(input => {
