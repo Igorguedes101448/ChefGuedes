@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Aplicar efeito de typing ao título principal
-    const heroTitle = document.querySelector('.hero-text h1');
+    const heroTitle = document.querySelector('.hero-content .hero-title') || document.querySelector('.hero-text h1');
     if (heroTitle && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         const originalText = heroTitle.textContent;
         improvedTypingEffect(heroTitle, originalText, 80);

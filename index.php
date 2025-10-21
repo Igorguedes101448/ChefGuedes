@@ -1,6 +1,13 @@
 <?php
 session_start();
+require_once 'includes/config.php';
+
 $username = $_SESSION['username'] ?? null;
+$user = null;
+
+if ($username && isset($_SESSION['user_id'])) {
+    $user = getCurrentUser();
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -28,8 +35,16 @@ $username = $_SESSION['username'] ?? null;
         <div class="auth-container">
             <?php if ($username): ?>
                 <div class="user-menu">
-                    <span class="user-avatar"><?= strtoupper(substr($username, 0, 2)) ?></span>
-                    <span class="user-name"><?= htmlspecialchars($username) ?></span>
+                    <a href="profile.php" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                        <span class="user-avatar">
+                            <?php if ($user && !empty($user['avatar']) && file_exists($user['avatar'])): ?>
+                                <img src="<?= htmlspecialchars($user['avatar']) ?>" alt="<?= htmlspecialchars($username) ?>">
+                            <?php else: ?>
+                                <?= strtoupper(substr($username, 0, 2)) ?>
+                            <?php endif; ?>
+                        </span>
+                        <span class="user-name"><?= htmlspecialchars($username) ?></span>
+                    </a>
                     <a href="logout.php" class="logout-btn">Sair</a>
                 </div>
             <?php else: ?>
@@ -49,6 +64,9 @@ $username = $_SESSION['username'] ?? null;
                     <i class="icon-search"></i> Explorar Receitas
                 </a>
                 <?php if ($username): ?>
+                    <a href="profile.php" class="nav-link">
+                        <i class="icon-user"></i> Meu Perfil
+                    </a>
                     <a href="receitas.php" class="nav-link">
                         <i class="icon-edit"></i> Minhas Receitas
                     </a>

@@ -3,9 +3,9 @@
    Para ser incluído após style.css
    =========================================== */
 
-/* Refined background behaviour */
-body::before,
-body::after {
+/* Refined background behaviour - não afetar footer */
+body:not(.has-footer)::before,
+body:not(.has-footer)::after {
     content: none !important;
 }
 
@@ -59,7 +59,7 @@ body::after {
 }
 
 /* Aplicar animações aos elementos */
-.hero-text {
+.hero-content {
     animation: fadeInUp 0.52s ease-out both;
 }
 

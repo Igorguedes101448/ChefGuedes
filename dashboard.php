@@ -115,13 +115,41 @@ try {
             gap: 20px;
         }
         
-        .welcome-section h1 {
+        .welcome-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            overflow: hidden;
+            border: 3px solid rgba(255,255,255,0.5);
+            flex-shrink: 0;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .welcome-text h1 {
             font-size: 2.2rem;
             margin-bottom: 10px;
             font-weight: 700;
         }
         
-        .welcome-section p {
+        .welcome-text p {
             font-size: 1.1rem;
             opacity: 0.9;
         }
@@ -392,15 +420,27 @@ try {
     <div class="dashboard-container">
         <div class="dashboard-header">
             <div class="welcome-section">
-                <h1>Olá, <?= htmlspecialchars($user['username']) ?>! 👋</h1>
-                <p>Bem-vindo ao seu painel pessoal do ChefGuedes</p>
+                <a href="profile.php" style="text-decoration: none;">
+                    <div class="user-avatar">
+                        <?php if (!empty($user['avatar']) && file_exists($user['avatar'])): ?>
+                            <img src="<?= htmlspecialchars($user['avatar']) ?>" alt="<?= htmlspecialchars($user['username']) ?>">
+                        <?php else: ?>
+                            <?= strtoupper(substr($user['username'], 0, 2)) ?>
+                        <?php endif; ?>
+                    </div>
+                </a>
+                <div class="welcome-text">
+                    <h1>Olá, <?= htmlspecialchars($user['username']) ?>!</h1>
+                    <p>Bem-vindo ao seu painel pessoal do ChefGuedes</p>
+                </div>
             </div>
             
             <div class="quick-actions">
-                <a href="receitas.php" class="action-btn">📝 Nova Receita</a>
-                <a href="explorar.php" class="action-btn">🔍 Explorar</a>
+                <a href="profile.php" class="action-btn">Meu Perfil</a>
+                <a href="receitas.php" class="action-btn">Nova Receita</a>
+                <a href="explorar.php" class="action-btn">Explorar</a>
                 <?php if (isAdmin()): ?>
-                    <a href="admin_dashboard.php" class="action-btn">⚙️ Admin</a>
+                    <a href="admin_dashboard.php" class="action-btn">Área Admin</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -413,25 +453,25 @@ try {
         
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon">📖</div>
+                <div class="stat-icon">R</div>
                 <div class="stat-number"><?= $user_stats['total_recipes'] ?></div>
                 <div class="stat-label">Suas Receitas</div>
             </div>
             
             <div class="stat-card">
-                <div class="stat-icon">👁️</div>
+                <div class="stat-icon">V</div>
                 <div class="stat-number"><?= number_format($user_stats['total_views']) ?></div>
                 <div class="stat-label">Visualizações</div>
             </div>
             
             <div class="stat-card">
-                <div class="stat-icon">❤️</div>
+                <div class="stat-icon">F</div>
                 <div class="stat-number"><?= $user_stats['total_favorites'] ?></div>
                 <div class="stat-label">Favoritos</div>
             </div>
             
             <div class="stat-card">
-                <div class="stat-icon">⭐</div>
+                <div class="stat-icon">A</div>
                 <div class="stat-number"><?= number_format($user_stats['avg_rating'], 1) ?></div>
                 <div class="stat-label">Avaliação Média</div>
             </div>
@@ -541,14 +581,14 @@ try {
                 <!-- Dicas Rápidas -->
                 <div class="section-card">
                     <div class="section-header">
-                        <h2 class="section-title">💡 Dicas do Chef</h2>
+                        <h2 class="section-title">Dicas do Chef</h2>
                     </div>
                     <div class="section-content">
                         <div style="color: var(--color-text-light); line-height: 1.6;">
-                            <p><strong>📸 Fotos atraentes:</strong> Use boa iluminação e mostre o prato finalizado.</p>
-                            <p><strong>📝 Instruções claras:</strong> Detalhe cada passo para facilitar o preparo.</p>
-                            <p><strong>⏱️ Tempos realistas:</strong> Informe tempos de preparo e cozimento precisos.</p>
-                            <p><strong>🏷️ Tags úteis:</strong> Use categorias e tags para facilitar a descoberta.</p>
+                            <p><strong>Fotos atraentes:</strong> Use boa iluminação e mostre o prato finalizado.</p>
+                            <p><strong>Instruções claras:</strong> Detalhe cada passo para facilitar o preparo.</p>
+                            <p><strong>Tempos realistas:</strong> Informe tempos de preparo e cozimento precisos.</p>
+                            <p><strong>Tags úteis:</strong> Use categorias e tags para facilitar a descoberta.</p>
                         </div>
                     </div>
                 </div>

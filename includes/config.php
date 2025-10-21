@@ -71,13 +71,17 @@ function formatTime($minutes) {
 }
 
 function getDifficultyText($difficulty) {
+    $levelKey = strtolower($difficulty);
     $levels = [
         'facil' => 'Fácil',
-        'medio' => 'Médio', 
-        'dificil' => 'Difícil'
+        'medio' => 'Médio',
+        'dificil' => 'Difícil',
+        'easy' => 'Fácil',
+        'medium' => 'Médio',
+        'hard' => 'Difícil'
     ];
-    
-    return $levels[$difficulty] ?? 'Médio';
+
+    return $levels[$levelKey] ?? 'Médio';
 }
 
 function truncateText($text, $length = 150) {

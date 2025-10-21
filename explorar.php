@@ -4,7 +4,35 @@ require_once 'includes/config.php';
 // Parâmetros de filtro
 $search = $_GET['search'] ?? '';
 $category = $_GET['category'] ?? 'all';
-$difficulty = $_GET['difficulty'] ?? '';
+$difficultyFilter = strtolower($_GET['difficulty'] ?? '');
+$difficultyAliases = [
+    'easy' => 'facil',
+    'facil' => 'facil',
+    'medium' => 'medio',
+    'medio' => 'medio',
+    'hard' => 'dificil',
+    'dificil' => 'dificil'
+];
+$difficultyCanonical = $difficultyAliases[$difficultyFilter] ?? '';
+$difficultyQueryMap = [
+    'facil' => ['facil', 'easy'],
+    'medio' => ['medio', 'medium'],
+    'dificil' => ['dificil', 'hard']
+];
+$difficultyClassMap = [
+    'easy' => 'facil',
+    'facil' => 'facil',
+    'medium' => 'medio',
+    'medio' => 'medio',
+    'hard' => 'dificil',
+    'dificil' => 'dificil'
+];
+$activeDifficultyFilter = match ($difficultyCanonical) {
+    'facil' => 'easy',
+    'medio' => 'medium',
+    'dificil' => 'hard',
+    default => $difficultyFilter
+};
 $vegetarian = $_GET['vegetarian'] ?? '';
 $vegan = $_GET['vegan'] ?? '';
 $gluten_free = $_GET['gluten_free'] ?? '';
@@ -28,9 +56,11 @@ if ($category !== 'all') {
     $params[] = $category;
 }
 
-if (!empty($difficulty)) {
-    $where_conditions[] = 'r.difficulty = ?';
-    $params[] = $difficulty;
+if (!empty($difficultyCanonical)) {
+    $difficultyValues = $difficultyQueryMap[$difficultyCanonical] ?? [$difficultyCanonical];
+    $placeholders = implode(', ', array_fill(0, count($difficultyValues), '?'));
+    $where_conditions[] = "r.difficulty IN ($placeholders)";
+    $params = array_merge($params, $difficultyValues);
 }
 
 if ($vegetarian === '1') {
@@ -622,15 +652,15 @@ $total_pages = ceil($total_recipes / $per_page);
                 
                 <!-- Filtros Adicionais -->
                 <div class="additional-filters">
-                    <div class="filter-option <?= $difficulty === 'easy' ? 'active' : '' ?>" 
+                <div class="filter-option <?= $activeDifficultyFilter === 'easy' ? 'active' : '' ?>" 
                          onclick="toggleFilter('difficulty', 'easy')">
                         Fácil
                     </div>
-                    <div class="filter-option <?= $difficulty === 'medium' ? 'active' : '' ?>" 
+                <div class="filter-option <?= $activeDifficultyFilter === 'medium' ? 'active' : '' ?>" 
                          onclick="toggleFilter('difficulty', 'medium')">
                         Médio
                     </div>
-                    <div class="filter-option <?= $difficulty === 'hard' ? 'active' : '' ?>" 
+                <div class="filter-option <?= $activeDifficultyFilter === 'hard' ? 'active' : '' ?>" 
                          onclick="toggleFilter('difficulty', 'hard')">
                         Difícil
                     </div>
@@ -649,7 +679,7 @@ $total_pages = ceil($total_recipes / $per_page);
                 </div>
                 
                 <input type="hidden" name="category" value="<?= htmlspecialchars($category) ?>">
-                <input type="hidden" name="difficulty" value="<?= htmlspecialchars($difficulty) ?>">
+                <input type="hidden" name="difficulty" value="<?= htmlspecialchars($activeDifficultyFilter) ?>">
                 <input type="hidden" name="vegetarian" value="<?= htmlspecialchars($vegetarian) ?>">
                 <input type="hidden" name="vegan" value="<?= htmlspecialchars($vegan) ?>">
                 <input type="hidden" name="gluten_free" value="<?= htmlspecialchars($gluten_free) ?>">
@@ -682,7 +712,11 @@ $total_pages = ceil($total_recipes / $per_page);
             <div class="recipes-grid">
                 <?php foreach ($recipes as $recipe): ?>
                     <div class="recipe-card" onclick="window.location.href='receita.php?slug=<?= urlencode($recipe['slug']) ?>'">
-                        <div class="recipe-difficulty-badge difficulty-<?= $recipe['difficulty'] ?>">
+                        <?php 
+                            $recipeDifficultyKey = strtolower($recipe['difficulty'] ?? '');
+                            $difficultyClass = $difficultyClassMap[$recipeDifficultyKey] ?? 'medio';
+                        ?>
+                        <div class="recipe-difficulty-badge difficulty-<?= $difficultyClass ?>">
                             <?= getDifficultyText($recipe['difficulty']) ?>
                         </div>
                         <div class="recipe-image">
