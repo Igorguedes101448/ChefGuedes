@@ -33,6 +33,16 @@ if ($username && isset($_SESSION['user_id'])) {
         </div>
         
         <div class="auth-container">
+            <!-- Theme Switcher -->
+            <div class="theme-switcher">
+                <button class="theme-btn" data-theme="light" title="Tema Claro">
+                    <span class="theme-icon">☀️</span>
+                </button>
+                <button class="theme-btn" data-theme="dark" title="Tema Escuro">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+            
             <?php if ($username): ?>
                 <div class="user-menu">
                     <a href="profile.php" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
@@ -67,9 +77,6 @@ if ($username && isset($_SESSION['user_id'])) {
                     <a href="profile.php" class="nav-link">
                         <i class="icon-user"></i> Meu Perfil
                     </a>
-                    <a href="receitas.php" class="nav-link">
-                        <i class="icon-edit"></i> Minhas Receitas
-                    </a>
                     <a href="dashboard.php" class="nav-link">
                         <i class="icon-chart"></i> Dashboard
                     </a>
@@ -77,8 +84,8 @@ if ($username && isset($_SESSION['user_id'])) {
                 <a href="analytics.php" class="nav-link">
                     <i class="icon-analytics"></i> Analytics
                 </a>
-                <a href="suporte.php" class="nav-link">
-                    <i class="icon-support"></i> Suporte
+                <a href="compartilhar.php" class="nav-link">
+                    <i class="icon-share"></i> Compartilhar
                 </a>
             </div>
         </div>
@@ -104,25 +111,6 @@ if ($username && isset($_SESSION['user_id'])) {
                         <span class="emoji-float"></span>
                         <span class="emoji-float"></span>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Search Section -->
-        <section class="search-section">
-            <div class="search-container">
-                <h2>Encontre a Receita Perfeita</h2>
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Procurar receitas, ingredientes..." class="search-input">
-                    <button class="search-btn">Pesquisar</button>
-                </div>
-                
-                <div class="category-filters">
-                    <button class="filter-btn active" data-category="all">Todas</button>
-                    <button class="filter-btn" data-category="pratos">Pratos</button>
-                    <button class="filter-btn" data-category="sopas">Sopas</button>
-                    <button class="filter-btn" data-category="marisco">Marisco</button>
-                    <button class="filter-btn" data-category="doces">Doces</button>
                 </div>
             </div>
         </section>
@@ -379,6 +367,7 @@ if ($username && isset($_SESSION['user_id'])) {
     </div>
 </div>
 
+<script src="js/theme.js"></script>
 <script src="js/index.js"></script>
 </body>
 </html>

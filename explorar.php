@@ -813,5 +813,6 @@ $total_pages = ceil($total_recipes / $per_page);
             }
         });
     </script>
+    <script src="js/theme.js"></script>
 </body>
 </html>

@@ -435,13 +435,25 @@ try {
                 </div>
             </div>
             
-            <div class="quick-actions">
-                <a href="profile.php" class="action-btn">Meu Perfil</a>
-                <a href="receitas.php" class="action-btn">Nova Receita</a>
-                <a href="explorar.php" class="action-btn">Explorar</a>
-                <?php if (isAdmin()): ?>
-                    <a href="admin_dashboard.php" class="action-btn">Área Admin</a>
-                <?php endif; ?>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <!-- Theme Switcher -->
+                <div class="theme-switcher">
+                    <button class="theme-btn" data-theme="light" title="Tema Claro">
+                        <span class="theme-icon">☀️</span>
+                    </button>
+                    <button class="theme-btn" data-theme="dark" title="Tema Escuro">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
+                
+                <div class="quick-actions">
+                    <a href="profile.php" class="action-btn">Meu Perfil</a>
+                    <a href="receitas.php" class="action-btn">Nova Receita</a>
+                    <a href="explorar.php" class="action-btn">Explorar</a>
+                    <?php if (isAdmin()): ?>
+                        <a href="admin_dashboard.php" class="action-btn">Área Admin</a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
         
@@ -601,5 +613,6 @@ try {
             </a>
         </div>
     </div>
+    <script src="js/theme.js"></script>
 </body>
 </html>

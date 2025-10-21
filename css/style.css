@@ -39,21 +39,41 @@ img, video {
     --color-secondary: #396972;
     --color-accent: #d8a35d;
     --color-text: #2f2a26;
+    --color-text-light: #6c757d;
     --color-muted: #7a746d;
+    --color-light: #f8f9fa;
     --shadow-soft: 0 18px 45px rgba(25, 38, 56, 0.08);
     --shadow-hover: 0 22px 60px rgba(25, 38, 56, 0.12);
     --radius-lg: 22px;
     --radius-md: 16px;
 }
 
+/* Dark Theme */
+[data-theme="dark"] {
+    --color-background: #1a1a1a;
+    --color-surface: #2d2d2d;
+    --color-surface-muted: #3a3a3a;
+    --color-primary: #ff8c5a;
+    --color-primary-dark: #e67a48;
+    --color-secondary: #5a9ba8;
+    --color-accent: #f4bc78;
+    --color-text: #e8e8e8;
+    --color-text-light: #b8b8b8;
+    --color-muted: #909090;
+    --color-light: #363636;
+    --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 22px 60px rgba(0, 0, 0, 0.4);
+}
+
 body{
-    background: #ffffff;
+    background: var(--color-background);
     color: var(--color-text);
     font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 1.65;
     position: relative;
     overflow-x: hidden;
     min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Login/Register page specific styling */
@@ -363,6 +383,13 @@ body::after {
     top: 0;
     z-index: 100;
     box-shadow: 0 14px 28px rgba(25, 38, 56, 0.08);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .app-header {
+    background: rgba(45, 45, 45, 0.95);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
 }
 
 .header-bg {
@@ -423,6 +450,64 @@ body::after {
     gap: 20px;
     position: relative;
     z-index: 2;
+}
+
+/* Theme Switcher */
+.theme-switcher {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(47, 42, 38, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .theme-switcher {
+    background: rgba(45, 45, 45, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.theme-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.theme-btn:hover {
+    background: rgba(201, 107, 62, 0.1);
+    transform: scale(1.1);
+}
+
+.theme-btn.active {
+    background: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(201, 107, 62, 0.3);
+}
+
+.theme-btn.active:hover {
+    background: var(--color-primary-dark);
+}
+
+.theme-icon {
+    font-size: 1.2rem;
+    filter: grayscale(1);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.theme-btn.active .theme-icon {
+    filter: grayscale(0);
+    opacity: 1;
 }
 
 .auth-buttons {
