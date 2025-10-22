@@ -74,19 +74,10 @@ if ($username && isset($_SESSION['user_id'])) {
                     <i class="icon-search"></i> Explorar Receitas
                 </a>
                 <?php if ($username): ?>
-                    <a href="profile.php" class="nav-link">
-                        <i class="icon-user"></i> Meu Perfil
-                    </a>
                     <a href="dashboard.php" class="nav-link">
                         <i class="icon-chart"></i> Dashboard
                     </a>
                 <?php endif; ?>
-                <a href="analytics.php" class="nav-link">
-                    <i class="icon-analytics"></i> Analytics
-                </a>
-                <a href="compartilhar.php" class="nav-link">
-                    <i class="icon-share"></i> Compartilhar
-                </a>
             </div>
         </div>
     </nav>
@@ -100,8 +91,7 @@ if ($username && isset($_SESSION['user_id'])) {
                     <p class="hero-subtitle">Receitas tradicionais portuguesas e criações modernas que despertam os sentidos</p>
                     
                     <div class="hero-buttons">
-                        <a href="compartilhar.php" class="btn-cta-primary">Compartilhar Receita</a>
-                        <a href="explorar.php" class="btn-cta-secondary">Explorar Mais</a>
+                        <a href="explorar.php" class="btn-cta-primary">Explorar Mais</a>
                     </div>
                 </div>
                 <div class="hero-visual">
