@@ -495,7 +495,7 @@ try {
                 <div class="section-card">
                     <div class="section-header">
                         <h2 class="section-title">Suas Receitas Recentes</h2>
-                        <a href="receitas.php" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">Ver todas</a>
+                        <a href="minhas_receitas.php" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">Ver todas</a>
                     </div>
                     <div class="section-content">
                         <?php if (empty($recent_recipes)): ?>

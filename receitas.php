@@ -20,19 +20,55 @@ function db_connect() {
 $errors = [];
 $success = '';
 
+// Função para validar categoria
+function validate_category($category) {
+    // Lista de palavras proibidas (insultos e palavras obscenas)
+    $forbidden_words = [
+        'merda', 'puta', 'caralho', 'foda', 'cu', 'porra', 'bosta', 'buceta', 
+        'cacete', 'pênis', 'vagina', 'sexo', 'pornografia', 'droga', 'cocaína',
+        'heroína', 'maconha', 'shit', 'fuck', 'bitch', 'ass', 'dick', 'pussy',
+        'cunt', 'bastard', 'damn', 'hell', 'whore', 'slut'
+    ];
+    
+    $category_lower = mb_strtolower($category, 'UTF-8');
+    
+    // Verificar palavras proibidas
+    foreach ($forbidden_words as $word) {
+        if (strpos($category_lower, $word) !== false) {
+            return false;
+        }
+    }
+    
+    // Verificar se contém apenas letras, espaços e acentos
+    if (!preg_match('/^[a-záàâãéèêíïóôõöúçñ\s]+$/iu', $category)) {
+        return false;
+    }
+    
+    // Verificar tamanho
+    if (strlen($category) < 3 || strlen($category) > 50) {
+        return false;
+    }
+    
+    return true;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_recipe'])) {
     $mysqli = db_connect();
     if (!$mysqli) {
         $errors[] = 'Erro de conexão com o banco de dados.';
     } else {
         $title = trim($_POST['title'] ?? '');
-        $description = trim($_POST['summary'] ?? ''); // Using description instead of summary
+        $description = trim($_POST['summary'] ?? '');
+        $category = trim($_POST['category'] ?? '');
+        $difficulty = trim($_POST['difficulty'] ?? '');
         $ingredients = trim($_POST['ingredients'] ?? '');
         $instructions = trim($_POST['instructions'] ?? '');
         $is_vegetarian = isset($_POST['is_vegetarian']) ? 1 : 0;
 
-        if (empty($title) || empty($ingredients) || empty($instructions)) {
+        if (empty($title) || empty($category) || empty($difficulty) || empty($ingredients) || empty($instructions)) {
             $errors[] = 'Preencha os campos obrigatórios.';
+        } elseif (!validate_category($category)) {
+            $errors[] = 'Categoria inválida. Use apenas nomes de alimentos ou tipos de pratos (sem números, símbolos ou palavras inadequadas).';
         } else {
             $slug = strtolower(str_replace(' ', '-', preg_replace('/[^A-Za-z0-9\-]/', '', $title)));
             $stmt = $mysqli->prepare("INSERT INTO recipes (user_id, title, slug, description, ingredients, instructions) VALUES (?, ?, ?, ?, ?, ?)");
@@ -51,24 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_recipe'])) {
         $mysqli->close();
     }
 }
-
-function get_recipes($query) {
-    $mysqli = db_connect();
-    if (!$mysqli) return [];
-    $result = $mysqli->query($query);
-    $recipes = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
-    $mysqli->close();
-    return $recipes;
-}
-
-$weekly_recipes = get_recipes("SELECT r.id, r.title, r.slug, r.description as summary, r.created_at, u.username FROM recipes r JOIN users u ON r.user_id = u.id WHERE r.created_at >= DATE_SUB(NOW(), INTERVAL 1 WEEK) ORDER BY r.created_at DESC LIMIT 8");
-
-$monthly_recipes = get_recipes("SELECT r.id, r.title, r.slug, r.description as summary, r.created_at, u.username FROM recipes r JOIN users u ON r.user_id = u.id WHERE r.created_at >= DATE_SUB(NOW(), INTERVAL 1 MONTH) ORDER BY r.created_at DESC LIMIT 8");
-
-$best_recipes = get_recipes("SELECT r.id, r.title, r.slug, r.description as summary, COALESCE(rs.average_rating, 0) as avg_rating FROM recipes r LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id ORDER BY rs.average_rating DESC LIMIT 8");
-
-$most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.description as summary, COALESCE(rs.total_views, 0) as made_count FROM recipes r LEFT JOIN recipe_stats rs ON r.id = rs.recipe_id ORDER BY rs.total_views DESC LIMIT 8");
-
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -116,6 +134,7 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.description as summa
 
         <section class="add-recipe">
             <h2>Compartilhar Nova Receita</h2>
+            
             <form method="post">
                 <input type="hidden" name="add_recipe" value="1">
                 
@@ -124,6 +143,24 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.description as summa
 
                 <label for="summary">Resumo (opcional):</label>
                 <textarea id="summary" name="summary" placeholder="Uma breve descrição da sua receita..."></textarea>
+                
+                <label for="category">Categoria:</label>
+                <input type="text" id="category" name="category" placeholder="Ex: Prato Principal, Entrada, Sobremesa, Sopa, Bebida..." required 
+                       maxlength="50" 
+                       style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;"
+                       oninput="validateCategory(this)">
+                <div id="category-suggestions" style="display: none; margin-top: 5px; padding: 10px; background: #f9f9f9; border-radius: 8px; font-size: 0.85rem; color: #666;">
+                    <strong>Sugestões:</strong> Prato Principal, Entrada, Sobremesa, Sopa, Bebida, Lanche, Salada, Acompanhamento
+                </div>
+                <div id="category-error" style="display: none; margin-top: 5px; padding: 8px; background: #ffe5e5; border-left: 3px solid #ff4444; border-radius: 4px; font-size: 0.85rem; color: #cc0000;"></div>
+                
+                <label for="difficulty">Dificuldade:</label>
+                <select id="difficulty" name="difficulty" required style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                    <option value="">Selecione a dificuldade</option>
+                    <option value="facil">Fácil</option>
+                    <option value="medio">Médio</option>
+                    <option value="dificil">Difícil</option>
+                </select>
 
                 <label for="ingredients">Ingredientes:</label>
                 <textarea id="ingredients" name="ingredients" placeholder="Liste todos os ingredientes necessários..." required></textarea>
@@ -131,94 +168,82 @@ $most_viewed = get_recipes("SELECT r.id, r.title, r.slug, r.description as summa
                 <label for="instructions">Modo de Preparo:</label>
                 <textarea id="instructions" name="instructions" placeholder="Descreva passo a passo como preparar..." required></textarea>
 
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                    <input type="checkbox" name="is_vegetarian" style="transform: scale(1.2);"> 
-                    Esta receita é vegetariana
-                </label>
+                <div style="margin: 20px 0;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 10px; color: #555;">Restrições Alimentares:</label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 8px;">
+                        <input type="checkbox" name="is_vegetarian" style="transform: scale(1.2);"> 
+                        Esta receita é vegetariana
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 8px;">
+                        <input type="checkbox" name="is_vegan" style="transform: scale(1.2);"> 
+                        Esta receita é vegana
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" name="is_gluten_free" style="transform: scale(1.2);"> 
+                        Esta receita é sem glúten
+                    </label>
+                </div>
 
                 <button type="submit" class="btn-primary">Adicionar Receita</button>
             </form>
         </section>
-
-        <section class="recipes-section">
-            <h2>Receitas da Semana</h2>
-            <div class="recipes-grid">
-                <?php if (empty($weekly_recipes)): ?>
-                    <p style="grid-column: 1/-1; text-align: center; color: #999; font-style: italic;">
-                        🤷‍♀️ Nenhuma receita foi adicionada esta semana. Seja o primeiro!
-                    </p>
-                <?php else: ?>
-                    <?php foreach ($weekly_recipes as $recipe): ?>
-                        <div class="recipe-card">
-                            <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
-                            <p><?php echo htmlspecialchars($recipe['summary'] ?: 'Uma deliciosa receita especial...'); ?></p>
-                            <small>Por <?php echo htmlspecialchars($recipe['username']); ?> em <?php echo date('d/m/Y', strtotime($recipe['created_at'])); ?></small>
-                            <a href="receita.php?slug=<?php echo htmlspecialchars($recipe['slug']); ?>">Ver Receita</a>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </section>
-
-        <section class="recipes-section">
-            <h2>Receitas do Mês</h2>
-            <div class="recipes-grid">
-                <?php if (empty($monthly_recipes)): ?>
-                    <p style="grid-column: 1/-1; text-align: center; color: #999; font-style: italic;">
-                        Nenhuma receita foi adicionada este mês.
-                    </p>
-                <?php else: ?>
-                    <?php foreach ($monthly_recipes as $recipe): ?>
-                        <div class="recipe-card">
-                            <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
-                            <p><?php echo htmlspecialchars($recipe['summary'] ?: 'Uma deliciosa receita especial...'); ?></p>
-                            <small>Por <?php echo htmlspecialchars($recipe['username']); ?> em <?php echo date('d/m/Y', strtotime($recipe['created_at'])); ?></small>
-                            <a href="receita.php?slug=<?php echo htmlspecialchars($recipe['slug']); ?>">Ver Receita</a>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </section>
-
-        <section class="recipes-section">
-            <h2>Melhores Receitas</h2>
-            <div class="recipes-grid">
-                <?php if (empty($best_recipes)): ?>
-                    <p style="grid-column: 1/-1; text-align: center; color: #999; font-style: italic;">
-                        ★ Ainda não temos avaliações suficientes.
-                    </p>
-                <?php else: ?>
-                    <?php foreach ($best_recipes as $recipe): ?>
-                        <div class="recipe-card">
-                            <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
-                            <p><?php echo htmlspecialchars($recipe['summary'] ?: 'Uma deliciosa receita especial...'); ?></p>
-                            <small>★ Avaliação: <?php echo $recipe['avg_rating'] > 0 ? number_format($recipe['avg_rating'], 1) . '/5' : 'Sem avaliações'; ?></small>
-                            <a href="receita.php?slug=<?php echo htmlspecialchars($recipe['slug']); ?>">Ver Receita</a>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </section>
-
-        <section class="recipes-section">
-            <h2>Mais Vistas</h2>
-            <div class="recipes-grid">
-                <?php if (empty($most_viewed)): ?>
-                    <p style="grid-column: 1/-1; text-align: center; color: #999; font-style: italic;">
-                        Nenhuma receita foi visualizada ainda.
-                    </p>
-                <?php else: ?>
-                    <?php foreach ($most_viewed as $recipe): ?>
-                        <div class="recipe-card">
-                            <h3><?php echo htmlspecialchars($recipe['title']); ?></h3>
-                            <p><?php echo htmlspecialchars($recipe['summary'] ?: 'Uma deliciosa receita especial...'); ?></p>
-                            <small>Visualizada <?php echo $recipe['made_count']; ?> vezes</small>
-                            <a href="receita.php?slug=<?php echo htmlspecialchars($recipe['slug']); ?>">Ver Receita</a>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </section>
+        
+        <script>
+        // Validação de categoria em tempo real
+        function validateCategory(input) {
+            const value = input.value.trim();
+            const suggestionsDiv = document.getElementById('category-suggestions');
+            const errorDiv = document.getElementById('category-error');
+            
+            // Lista de palavras proibidas
+            const forbiddenWords = [
+                'merda', 'puta', 'caralho', 'foda', 'cu', 'porra', 'bosta', 'buceta',
+                'cacete', 'pênis', 'vagina', 'sexo', 'pornografia', 'droga', 'cocaína',
+                'heroína', 'maconha', 'shit', 'fuck', 'bitch', 'ass', 'dick', 'pussy',
+                'cunt', 'bastard', 'damn', 'hell', 'whore', 'slut'
+            ];
+            
+            // Mostrar sugestões quando vazio ou pouco texto
+            if (value.length < 3) {
+                suggestionsDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+                input.style.borderColor = '#ddd';
+                return;
+            } else {
+                suggestionsDiv.style.display = 'none';
+            }
+            
+            const valueLower = value.toLowerCase();
+            
+            // Verificar palavras proibidas
+            let hasForbiddenWord = false;
+            forbiddenWords.forEach(word => {
+                if (valueLower.includes(word)) {
+                    hasForbiddenWord = true;
+                }
+            });
+            
+            if (hasForbiddenWord) {
+                errorDiv.textContent = '❌ Categoria inválida. Por favor, use termos apropriados.';
+                errorDiv.style.display = 'block';
+                input.style.borderColor = '#ff4444';
+                return;
+            }
+            
+            // Verificar se contém apenas letras e espaços (com acentos)
+            const validPattern = /^[a-záàâãéèêíïóôõöúçñ\s]+$/i;
+            if (!validPattern.test(value)) {
+                errorDiv.textContent = '❌ Use apenas letras e espaços (sem números ou símbolos).';
+                errorDiv.style.display = 'block';
+                input.style.borderColor = '#ff4444';
+                return;
+            }
+            
+            // Se passou todas as validações
+            errorDiv.style.display = 'none';
+            input.style.borderColor = '#4caf50';
+        }
+        </script>
     </div>
 </body>
 </html>
