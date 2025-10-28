@@ -505,6 +505,7 @@ try {
                 <nav class="main-nav">
                     <a href="explorar.php">Explorar</a>
                     <a href="dashboard.php">Dashboard</a>
+                    <a href="grupos_familiares.php">Grupos Familiares</a>
                 </nav>
                 
                 <div class="header-actions">

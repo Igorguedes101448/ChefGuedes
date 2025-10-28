@@ -450,6 +450,7 @@ try {
                     <a href="profile.php" class="action-btn">Meu Perfil</a>
                     <a href="receitas.php" class="action-btn">Nova Receita</a>
                     <a href="explorar.php" class="action-btn">Explorar</a>
+                    <a href="grupos_familiares.php" class="action-btn">Grupos Familiares</a>
                     <?php if (isAdmin()): ?>
                         <a href="admin_dashboard.php" class="action-btn">Área Admin</a>
                     <?php endif; ?>
