@@ -15,90 +15,122 @@ if ($username && isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChefGuedes - Sabores Autênticos</title>
+    <link rel="stylesheet" href="css/hero-modern.css">
     <link rel="stylesheet" href="css/style-enhanced.css">
     <link rel="stylesheet" href="css/culinary-enhanced.css">
     <link rel="stylesheet" href="css/animations-enhanced.css">
 </head>
 <body>
 <div class="app-shell">
-    <header class="app-header">
-        <div class="header-bg"></div>
-        <div class="brand-container">
-            <div class="brand">
-                <span class="brand-icon">CG</span>
-                ChefGuedes
-                <div class="brand-underline"></div>
-            </div>
-            <div class="brand-tagline">Sabores Autênticos</div>
-        </div>
-        
-        <div class="auth-container">
-            <!-- Theme Switcher -->
-            <div class="theme-switcher">
-                <button class="theme-btn" data-theme="light" title="Tema Claro">
-                    <span class="theme-icon">☀️</span>
-                </button>
-                <button class="theme-btn" data-theme="dark" title="Tema Escuro">
-                    <span class="theme-icon">🌙</span>
-                </button>
-            </div>
-            
-            <?php if ($username): ?>
-                <div class="user-menu">
-                    <a href="profile.php" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
-                        <span class="user-avatar">
-                            <?php if ($user && !empty($user['avatar']) && file_exists($user['avatar'])): ?>
-                                <img src="<?= htmlspecialchars($user['avatar']) ?>" alt="<?= htmlspecialchars($username) ?>">
-                            <?php else: ?>
-                                <?= strtoupper(substr($username, 0, 2)) ?>
-                            <?php endif; ?>
-                        </span>
-                        <span class="user-name"><?= htmlspecialchars($username) ?></span>
-                    </a>
-                    <a href="logout.php" class="logout-btn">Sair</a>
+    <!-- Hero Header com Background -->
+    <div class="hero-wrapper">
+        <!-- Header Transparente sobre Hero -->
+        <header class="hero-header">
+            <div class="header-container">
+                <!-- Logo -->
+                <div class="logo-brand">
+                    <svg class="chef-icon" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <path d="M24 8C18 8 14 12 14 18V24H34V18C34 12 30 8 24 8Z" fill="currentColor" opacity="0.2"/>
+                        <path d="M14 24H34V38C34 39.1 33.1 40 32 40H16C14.9 40 14 39.1 14 38V24Z" fill="currentColor"/>
+                        <circle cx="20" cy="30" r="1.5" fill="white"/>
+                        <circle cx="24" cy="32" r="1.5" fill="white"/>
+                        <circle cx="28" cy="30" r="1.5" fill="white"/>
+                    </svg>
+                    <span class="brand-text">O Chefeguedes</span>
                 </div>
-            <?php else: ?>
-                <div class="auth-buttons">
-                    <a href="login.php" class="login-btn">Entrar</a>
-                    <a href="register.php" class="register-btn">Registar</a>
+
+                <!-- Search Bar Central -->
+                <div class="hero-search-container">
+                    <form action="explorar.php" method="GET" class="hero-search-form">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            class="hero-search-input" 
+                            placeholder="Pesquisar receitas..."
+                            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
+                        >
+                        <button type="submit" class="hero-search-btn">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </form>
                 </div>
-            <?php endif; ?>
-        </div>
-    </header>
 
-    <!-- Quick Navigation -->
-    <nav class="quick-nav">
-        <div class="container">
-            <div class="nav-links">
-                <a href="explorar.php" class="nav-link primary">
-                    <i class="icon-search"></i> Explorar Receitas
-                </a>
-                <?php if ($username): ?>
-                    <a href="dashboard.php" class="nav-link">
-                        <i class="icon-chart"></i> Dashboard
-                    </a>
-                    <a href="grupos_familiares.php" class="nav-link">
-                        Grupos Familiares
-                    </a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </nav>
+                <!-- Navigation Links -->
+                <nav class="hero-nav">
+                    <a href="explorar.php" class="nav-item">Receitas</a>
+                    <a href="grupos_familiares.php" class="nav-item">Comunidade</a>
+                    <a href="suporte.php" class="nav-item">Sobre Nós</a>
+                    <a href="suporte.php" class="nav-item">Contacto</a>
+                </nav>
 
-    <main class="app-main">
-        <!-- Hero Section -->
-        <section class="hero-section animate-fade-in">
-            <div class="hero-container">
-                <div class="hero-content">
-                    <h1 class="hero-title animate-fade-in-up">Descubra Sabores Únicos</h1>
-                    <p class="hero-subtitle animate-fade-in-up delay-100">Receitas tradicionais portuguesas e criações modernas que despertam os sentidos</p>
-                    
-                    <div class="hero-buttons animate-fade-in-up delay-200">
-                        <a href="explorar.php" class="btn-cta-primary">Explorar Mais</a>
+                <!-- Auth Buttons -->
+                <div class="hero-auth">
+                    <!-- Theme Switcher -->
+                    <div class="theme-switcher-modern">
+                        <button class="theme-toggle-btn" data-theme="light" title="Tema Claro">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <circle cx="10" cy="10" r="4" fill="currentColor"/>
+                                <path d="M10 1v2M10 17v2M19 10h-2M3 10H1M16.364 3.636l-1.414 1.414M5.05 14.95l-1.414 1.414M16.364 16.364l-1.414-1.414M5.05 5.05L3.636 3.636" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                        <button class="theme-toggle-btn" data-theme="dark" title="Tema Escuro">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" fill="currentColor"/>
+                            </svg>
+                        </button>
                     </div>
+                    
+                    <?php if ($username): ?>
+                        <a href="profile.php" class="user-profile-link">
+                            <span class="user-avatar-small">
+                                <?php if ($user && !empty($user['avatar']) && file_exists($user['avatar'])): ?>
+                                    <img src="<?= htmlspecialchars($user['avatar']) ?>" alt="<?= htmlspecialchars($username) ?>">
+                                <?php else: ?>
+                                    <?= strtoupper(substr($username, 0, 1)) ?>
+                                <?php endif; ?>
+                            </span>
+                        </a>
+                        <a href="logout.php" class="btn-header-secondary">Sair</a>
+                    <?php else: ?>
+                        <a href="login.php" class="btn-header-secondary">Entrar</a>
+                        <a href="register.php" class="btn-header-primary">Registar</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Content -->
+        <section class="hero-main">
+            <div class="hero-overlay"></div>
+            <div class="hero-background"></div>
+            
+            <div class="hero-content-center">
+                <!-- Chef Hat Icon -->
+                <div class="hero-icon">
+                    <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                        <path d="M60 20C42 20 35 30 35 45V60H85V45C85 30 78 20 60 20Z" fill="white" opacity="0.2"/>
+                        <path d="M35 60H85V95C85 97.75 82.75 100 80 100H40C37.25 100 35 97.75 35 95V60Z" fill="white"/>
+                        <circle cx="50" cy="75" r="3" fill="#D4A574"/>
+                        <circle cx="60" cy="80" r="3" fill="#D4A574"/>
+                        <circle cx="70" cy="75" r="3" fill="#D4A574"/>
+                    </svg>
+                </div>
+
+                <h1 class="hero-title-main">Bem-vindo ao O Chefeguedes</h1>
+                <p class="hero-subtitle-main">
+                    Partilhe, explore e descubra receitas culinárias numa comunidade apaixonada por cozinha
+                </p>
+
+                <div class="hero-cta">
+                    <a href="explorar.php" class="btn-hero-primary">Explorar Receitas</a>
                 </div>
             </div>
         </section>
+    </div>
+
+    <main class="app-main">
 
         <!-- Featured Recipes -->
         <section class="featured-section">
